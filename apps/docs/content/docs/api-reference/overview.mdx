@@ -1,0 +1,29 @@
+---
+title: API Reference Overview
+description: HTTP surface exposed by the sovseal replication endpoint (Platform & self-hosted).
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+Endpoint-by-endpoint reference incoming. The surface is **deliberately small** — sovseal
+is a local-first system; the HTTP API only exists to move ciphertext between devices.
+</Callout>
+
+## Endpoint catalog
+
+| Method | Path                    | Purpose                              |
+| ------ | ----------------------- | ------------------------------------ |
+| POST   | `/v2/replicate/push`    | Upload one or more ciphertext records |
+| POST   | `/v2/replicate/pull`    | Fetch records by path-hash since cursor |
+| GET    | `/v2/replicate/list`    | List path-hashes for a project       |
+| POST   | `/v2/projects`          | Create a project (Platform only)     |
+| POST   | `/v2/projects/:id/keys` | Rotate or revoke an API key          |
+
+## What this page will cover
+
+- TODO: base URLs (Platform vs self-hosted)
+- TODO: authentication headers
+- TODO: request/response examples per endpoint
+- TODO: error envelope and codes
+- TODO: OpenAPI spec link

@@ -1,0 +1,101 @@
+---
+title: Introduction
+description: What sovseal is, what it isn't, and the architectural commitments that make it different.
+---
+
+import { Callout } from "@/components/callout";
+
+**sovseal is a local-first, zero-knowledge memory layer for AI agents.** It runs an
+on-device vector index (LanceDB + Transformers.js), AES-256-GCM encrypts every record
+before it leaves the machine, and replicates ciphertext to a server-blind backend in
+the background. Every load is cryptographically verified.
+
+It exists because the existing memory layers for agents are network-bound databases
+with marketing about "encryption at rest." sovseal inverts that: **the database is on
+your device; the network only ever sees ciphertext.**
+
+---
+
+## What sovseal is
+
+- **A memory layer.** `store_memory` to persist, `recall_memory` for semantic search.
+  Both are local. Both are 0 RTT.
+- **Zero-knowledge.** The server holds AES-256-GCM ciphertext and SHA-256 path hashes.
+  Nothing else.
+- **Crash-safe by construction.** Every snapshot points to its parent; restart replays
+  the lineage to a byte-identical HEAD.
+- **Drop-in for MCP clients.** One `npx` line wires it into Claude Desktop, Cursor,
+  Windsurf, OpenClaw.
+- **An SDK for everything else.** `@sovseal/sdk` for Node 20+ — embed it in your own
+  agent runtime.
+
+## What sovseal isn't
+
+- **A vector database service.** It's a client-side memory layer that happens to use
+  a local vector index. There is no "sovseal cluster" to operate.
+- **A RAG framework.** Use it as the memory primitive inside your RAG pipeline; don't
+  expect prompts, retrievers, or chains out of the box.
+- **A backup tool.** Replication is for cross-device sync and durability, not for
+  point-in-time restore of human files.
+- **A general-purpose KV store.** Records are designed around agent memory semantics
+  (lineage, snapshots, semantic recall), not arbitrary blob storage.
+
+---
+
+## The three commitments
+
+Every other design choice follows from these.
+
+### 1. Reads never touch the network
+
+`recall_memory` resolves against the on-device LanceDB index. There is no fallback to
+a remote query. If your laptop is offline, your agent's memory still works at full
+speed. The 0-RTT property is not an optimization — it's a guarantee enforced by
+having no remote read path in the first place.
+
+### 2. The server is blind by construction
+
+The replication endpoint sees three things and nothing else:
+
+- AES-256-GCM ciphertext (the record)
+- A SHA-256 hash of the path (used for idempotency; the key name is never sent)
+- A `project_id` (used for auth scoping)
+
+There is no API the server could expose to read your data, because the server doesn't
+have the key. This is a property of the architecture, not a setting you can toggle.
+
+### 3. Every restore is cryptographically verified
+
+On restore, the SDK re-derives `sha256(canonicalize(payload))` and compares against the
+expected digest. AES-GCM auth tags catch ciphertext tampering; the hash catches
+wholesale substitution. **Mismatch fails closed** — the read returns an error and the
+agent does not see a poisoned record.
+
+---
+
+## Who should use it
+
+| You are…                                         | sovseal fits because…                                                  |
+| ------------------------------------------------ | ---------------------------------------------------------------------- |
+| Building an **autonomous trading agent**         | Strategy survives crashes; the operator can't read the strategy        |
+| Building a **healthcare or legal co-pilot**      | PHI/PII never leaves the device; replication moves ciphertext only     |
+| Running **threat-detection agents**              | VSR catches adversarial memory poisoning before the agent acts on it   |
+| Shipping a **local AI assistant** (Cursor, etc.) | Persistent memory across sessions with no signup and no API key        |
+| Operating in **strict-compliance environments**  | Self-host the edge function; bring your own Postgres and object store  |
+
+## Who should not use it
+
+- **You need a managed RAG-as-a-service.** Use Pinecone Assistants, mem0, or LangChain
+  Hub. sovseal hands you the primitive; you build the pipeline.
+- **You want server-side semantic search.** That's mem0's positioning. sovseal's whole
+  point is that the search runs locally.
+- **Your records must be inspectable by your platform team.** sovseal is designed so
+  they cannot be. Use a conventional database with audit logs instead.
+
+---
+
+## Next
+
+- [**Quickstart**](/platform/getting-started/quickstart) — get a working memory layer in 60 seconds.
+- [**Architecture**](/platform/getting-started/architecture) — the request lifecycle in detail.
+- [**Core concepts**](/platform/core-concepts/memory-model) — the data model start to finish.

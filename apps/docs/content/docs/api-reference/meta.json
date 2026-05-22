@@ -1,0 +1,17 @@
+{
+  "title": "API Reference",
+  "description": "HTTP surface exposed by the replication endpoint.",
+  "root": true,
+  "pages": [
+    "overview",
+    "authentication",
+    "errors",
+    "--- Replication ---",
+    "replication-push",
+    "replication-pull",
+    "replication-list",
+    "--- Projects ---",
+    "create-project",
+    "rotate-key"
+  ]
+}

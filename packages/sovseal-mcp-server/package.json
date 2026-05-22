@@ -1,0 +1,64 @@
+{
+  "name": "@sovseal/mcp-server",
+  "version": "0.3.0",
+  "description": "Local-first semantic memory MCP server for autonomous agents. On-device LanceDB + Transformers.js, write-behind replication.",
+  "license": "Apache-2.0",
+  "author": "SovSeal",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sovseal/sovseal",
+    "directory": "packages/sovseal-mcp-server"
+  },
+  "homepage": "https://sovseal.com",
+  "keywords": [
+    "sovseal",
+    "mcp",
+    "model-context-protocol",
+    "ai-agent",
+    "state-continuity",
+    "encryption",
+    "aes-256-gcm",
+    "zero-knowledge",
+    "autonomous-agents",
+    "vsr",
+    "verified-semantic-recall"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "bin": {
+    "sovseal-mcp-server": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "bench": "vitest run src/__tests__/bench-v2.test.ts"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "4.2.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@sovseal/sdk": "workspace:*",
+    "@inheribase/core-protocol": "workspace:*",
+    "apache-arrow": "14.0.2",
+    "vectordb": "0.21.2",
+    "zod": "^3.22.4",
+    "zod-to-json-schema": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.16"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

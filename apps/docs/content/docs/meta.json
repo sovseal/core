@@ -1,0 +1,14 @@
+{
+  "title": "sovseal",
+  "pages": [
+    "index",
+    "platform",
+    "self-hosted",
+    "integrations",
+    "cookbooks",
+    "sdk-reference",
+    "api-reference",
+    "components",
+    "changelog"
+  ]
+}

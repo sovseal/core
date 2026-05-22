@@ -1,0 +1,30 @@
+---
+title: Platform vs Self-Hosted
+description: Decision guide for choosing the managed sovseal Platform or a self-hosted deployment.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+This decision guide is being finalized. The short version: pick **Platform** for managed
+replication and zero-ops; pick **Self-Hosted** when compliance or data residency rules
+require you to own the ciphertext store.
+</Callout>
+
+## At a glance
+
+|                       | Platform (Managed)                  | Self-Hosted                             |
+| --------------------- | ----------------------------------- | --------------------------------------- |
+| **Read latency**      | 0 RTT (always local)                | 0 RTT (always local)                    |
+| **Write replication** | Managed, write-behind               | You operate the endpoint                |
+| **Storage**           | Managed Postgres + object store     | Your Postgres + object store            |
+| **Encryption**        | Client-side AES-256-GCM             | Client-side AES-256-GCM (configurable)  |
+| **Key custody**       | Device-only (server-blind)          | Device-only (server-blind)              |
+| **Ops surface**       | None                                | One edge function + one Postgres schema |
+
+## What this page will cover
+
+- TODO: side-by-side feature matrix
+- TODO: compliance-driven decision tree (HIPAA, SOC 2, FedRAMP-aligned controls)
+- TODO: cost & latency comparison at common workload sizes
+- TODO: migration path from Platform to Self-Hosted (and back)

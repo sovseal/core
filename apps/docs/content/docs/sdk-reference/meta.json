@@ -1,0 +1,10 @@
+{
+  "title": "SDK Reference",
+  "description": "@sovseal/sdk and @sovseal/mcp-server — types, methods, schemas.",
+  "root": true,
+  "pages": [
+    "overview",
+    "node-sdk",
+    "mcp-server"
+  ]
+}

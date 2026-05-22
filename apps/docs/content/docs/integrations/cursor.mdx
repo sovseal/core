@@ -1,0 +1,31 @@
+---
+title: Cursor
+description: Persistent local memory for Cursor coding sessions via MCP.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+End-to-end Cursor guide incoming.
+</Callout>
+
+## Install
+
+Add this to `~/.cursor/mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "sovseal-memory": {
+      "command": "npx",
+      "args": ["-y", "@sovseal/mcp-server"]
+    }
+  }
+}
+```
+
+## What this page will expand to
+
+- TODO: recommended Cursor rules for steering the agent to call `recall_memory` first
+- TODO: project-scoped vs. global memory configuration
+- TODO: troubleshooting

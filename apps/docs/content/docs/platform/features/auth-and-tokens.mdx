@@ -1,0 +1,25 @@
+---
+title: Authentication & Tokens
+description: API key types, scopes, rotation, and revocation.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+Authentication reference incoming.
+</Callout>
+
+## Token types at a glance
+
+| Prefix         | Purpose                                  | Scope                |
+| -------------- | ---------------------------------------- | -------------------- |
+| `sov_live_*`   | Production SDK / server-side use         | Full project access  |
+| `sov_test_*`   | Local development & staging              | Sandboxed project    |
+| `sov_proj_*`   | MCP plugin self-asserting (no signup)    | Single project, local-first |
+
+## What this page will cover
+
+- TODO: how to generate, scope, and rotate each token type
+- TODO: header format and accepted auth schemes
+- TODO: leaked-key revocation playbook
+- TODO: per-key audit log in the Platform dashboard

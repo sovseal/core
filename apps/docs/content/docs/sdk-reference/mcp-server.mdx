@@ -1,0 +1,28 @@
+---
+title: "@sovseal/mcp-server"
+description: MCP server reference — tools, JSON schemas, transport.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+Full MCP tool reference incoming. Today's authoritative source is the package
+[README](https://github.com/sovseal/sovseal/tree/main/packages/sovseal-mcp-server).
+</Callout>
+
+## Tools exposed
+
+| Tool             | Purpose                              | Network |
+| ---------------- | ------------------------------------ | ------- |
+| `store_memory`   | Persist a record under a path        | 0 RTT (write-behind) |
+| `recall_memory`  | Semantic search the local index      | 0 RTT |
+| `list_memories`  | Enumerate stored paths (with filter) | 0 RTT |
+| `delete_memory`  | Remove a record + tombstone replica  | 0 RTT (tombstone replicated) |
+
+## What this page will cover
+
+- TODO: full JSON schema for each tool
+- TODO: example tool calls and responses
+- TODO: stdio transport configuration
+- TODO: error codes returned over MCP
+- TODO: how to enable verbose logging

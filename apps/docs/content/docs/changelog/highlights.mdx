@@ -1,0 +1,45 @@
+---
+title: Highlights (SPK)
+description: Major product launches, headline features, and milestones for the SovSeal State Preservation Kit (SPK).
+---
+
+import { Callout } from "@/components/callout";
+
+# Highlights (SPK)
+
+Major product launches, headline features, and core milestones for the **State Preservation Kit (SPK)**.
+
+---
+
+[​](https://docs.mem0.ai/changelog/highlights#2026-05-13)
+
+### 2026-05-13
+
+#### Temporal Reasoning for Agent State
+
+**Temporal Reasoning — Time-Aware Retrieval for Platform v3**
+The State Preservation Kit can now interpret time-aware memories and queries so autonomous assistants retrieve the right historical states automatically.
+
+- **Time-aware search intent** — Queries like `last week`, `upcoming`, `right now`, and `as of March 2025` return contextually appropriate results instantly.
+- **Enabled by default** — Zero configuration required for v3 state writes or queries.
+- **Anchored relative queries** — `reference_date` anchors relative search phrases for audits, state backfills, and reproducible demos.
+- **Normal response shape** — Temporal reasoning affects ranking while preserving existing client response schemas.
+
+See [Zero-Knowledge Memory](/platform/core-concepts/zero-knowledge) for usage details.
+
+---
+
+[​](https://docs.mem0.ai/changelog/highlights#2026-05-08)
+
+### 2026-05-08
+
+#### Memory Decay and Access Reinforcement
+
+**Memory Decay — Recently-Used Memories Surface Higher, Automatically**
+Per-project search-time ranking bias that boosts recently-accessed state frames and gently dampens stale ones.
+
+- **Soft bias, never a filter** — Scaling factors stay clamped between `0.3×–1.5×`. Decay reorders candidates but never zeros them out.
+- **Reinforcement loop** — Every memory returned in a search updates its access history, floating frequently-used facts naturally to the top.
+- **Clamped scores** — Existing API contract preserved; no client-side schema changes required.
+
+See [Deterministic Lineage](/platform/core-concepts/deterministic-lineage) for deep architectural details.

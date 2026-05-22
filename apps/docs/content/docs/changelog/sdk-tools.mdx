@@ -1,0 +1,40 @@
+---
+title: SDK & Tools (VTC)
+description: Release notes for the SovSeal Python SDK, TypeScript SDK, stdio Model Context Protocol (MCP) server, and developer CLI tools.
+---
+
+import { Callout } from "@/components/callout";
+
+# SDK & Tools (VTC)
+
+Release notes for the SovSeal Python SDK, TypeScript SDK, stdio Model Context Protocol (MCP) server, and developer CLI tools.
+
+---
+
+[​](https://docs.mem0.ai/changelog/sdk-tools#2026-05-12)
+
+### 2026-05-12
+
+#### Standard stdio MCP Server v2.1.0
+
+**Stdio MCP Server — Decentralized Local Caching**
+The local stdio-based MCP server introduces SQLite-backed LTM-STM caching to improve local offline performance.
+
+- **Auto-Provisioning** — Automatically establishes free local projects (`sov_proj_<uuid>`) if no API key is specified, allowing instant zero-configuration startup.
+- **Enhanced Thread Isolation** — Isolates workspace directories across multiple concurrent editor sessions to prevent state leakage.
+- **Optimized SQL Indexing** — Reduces query execution latencies for local lookups down to `<5ms`.
+
+---
+
+[​](https://docs.mem0.ai/changelog/sdk-tools#2026-05-02)
+
+### 2026-05-02
+
+#### TypeScript SDK v3.0.3
+
+**TypeScript SDK — Hardware-Accelerated Web Cryptography**
+Optimized the core encryption pipelines in the TypeScript SDK to leverage browser and edge runtime acceleration.
+
+- **Dual loading primitives** — 100% isomorphic load compatibility across Deno (for Edge functions) and Node.js (for servers).
+- **AES-256-GCM hardware boosts** — Interacts directly with native system crypto stores for 3x faster encryption speeds.
+- **Smaller bundle size** — Pruned dependencies, reducing the final core-protocol module size by 40%.

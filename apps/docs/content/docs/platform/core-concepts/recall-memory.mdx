@@ -1,0 +1,27 @@
+---
+title: recall_memory
+description: How semantic recall works locally with sub-25ms p99 latency and zero network round-trips.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+Full reference incoming. The core guarantee: **every `recall_memory` call resolves
+against the on-device LanceDB index — no RTT, no API key check, no server.**
+</Callout>
+
+## Quick reference
+
+- **Latency**: p50 6.1 ms · p95 10.4 ms · p99 21.8 ms (10K records, warm cache)
+- **Cold start**: ~1.2 s on first call (embedding model + index warmup)
+- **Network**: 0 RTT — calls never leave the device
+- **Cache**: 256-entry LRU on query embeddings (configurable)
+
+## What this page will cover
+
+- TODO: full parameter table (`query`, `top_k`, `filters`, `min_score`)
+- TODO: LRU cache tuning and observability
+- TODO: how cold-start is eliminated via eager pipeline warmup at MCP connect
+- TODO: filter syntax (metadata, tags, lineage parent)
+- TODO: deterministic ranking and tie-breaking rules
+- TODO: language-tabbed examples (Node SDK, MCP tool, cURL against self-hosted REST)

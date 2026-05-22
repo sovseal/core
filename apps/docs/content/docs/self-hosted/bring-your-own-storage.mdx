@@ -1,0 +1,19 @@
+---
+title: Bring Your Own Storage
+description: Swap the default Postgres + object store for your own backends.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+Storage-driver pluggability lands in v0.4. This page will document the interface and
+include reference adapters for S3-compatible object stores and external Postgres.
+</Callout>
+
+## What this page will cover
+
+- TODO: storage driver interface (`put`, `get`, `list`, `delete`)
+- TODO: ciphertext-only contract — what your driver MUST NOT do
+- TODO: reference adapter — S3
+- TODO: reference adapter — Cloudflare R2
+- TODO: reference adapter — external Postgres + bytea column

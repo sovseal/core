@@ -1,0 +1,144 @@
+@import "tailwindcss";
+@import "fumadocs-ui/css/neutral.css";
+@import "fumadocs-ui/css/preset.css";
+
+@theme {
+  --color-brand-50: #fdfbf7;
+  --color-brand-100: #f5edd9;
+  --color-brand-200: #e8d6a8;
+  --color-brand-300: #d9bd76;
+  --color-brand-400: #c5a059;
+  --color-brand-500: #c5a059;
+  --color-brand-600: #a88940;
+  --color-brand-700: #8b7034;
+  --color-brand-800: #6e5829;
+  --color-brand-900: #52421f;
+  --color-brand-950: #362c15;
+
+  --color-dark-50: #f8f8f8;
+  --color-dark-100: #e8e8e8;
+  --color-dark-200: #d0d0d0;
+  --color-dark-300: #a8a8a8;
+  --color-dark-400: #64748b;
+  --color-dark-500: #64748b;
+  --color-dark-600: #3a3a3a;
+  --color-dark-700: #1a1a1a;
+  --color-dark-800: #0d0d0d;
+  --color-dark-900: #080808;
+  --color-dark-950: #050505;
+
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-playfair), Georgia, serif;
+
+  --shadow-gold-glow: 0 0 20px rgba(197, 160, 89, 0.15);
+  --shadow-gold-glow-intense: 0 0 30px rgba(197, 160, 89, 0.3);
+}
+
+/* ========================================
+   LIGHT MODE THEME (Ivory Gold)
+   User preference via toggle
+   ======================================== */
+:root {
+  --background: #fdfcfb;
+  --foreground: #1c1917;
+  --fd-primary: #c5a059;
+  --fd-primary-foreground: #fdfcfb;
+}
+
+:root,
+html:not(.dark) {
+  --fd-background: #fdfcfb;
+  --fd-foreground: #1c1917;
+  --fd-card: #ffffff;
+  --fd-card-foreground: #1c1917;
+  --fd-popover: #ffffff;
+  --fd-popover-foreground: #1c1917;
+  --fd-primary: #a88940;
+  --fd-primary-foreground: #fdfcfb;
+  --fd-secondary: #f5edd9;
+  --fd-secondary-foreground: #1c1917;
+  --fd-muted: #fdfbf5;
+  --fd-muted-foreground: #57534e;
+  --fd-accent: #c5a05915;
+  --fd-accent-foreground: #8b7034;
+  --fd-destructive: #ef4444;
+  --fd-destructive-foreground: #fdfcfb;
+  --fd-border: #e8d6a8;
+  --fd-input: #f5edd9;
+  --fd-ring: #c5a059;
+}
+
+/* ========================================
+   DARK MODE THEME (Old Money Security)
+   ======================================== */
+.dark {
+  --background: #050505;
+  --foreground: #f8f8f8;
+}
+
+.dark {
+  --fd-background: #050505;
+  --fd-foreground: #f8f8f8;
+  --fd-card: #080808;
+  --fd-card-foreground: #f8f8f8;
+  --fd-popover: #080808;
+  --fd-popover-foreground: #f8f8f8;
+  --fd-primary: #c5a059;
+  --fd-primary-foreground: #050505;
+  --fd-secondary: #0d0d0d;
+  --fd-secondary-foreground: #f8f8f8;
+  --fd-muted: #1a1a1a;
+  --fd-muted-foreground: #a8a8a8;
+  --fd-accent: #c5a05922;
+  --fd-accent-foreground: #c5a059;
+  --fd-destructive: #ef4444;
+  --fd-destructive-foreground: #f8f8f8;
+  --fd-border: #1a1a1a;
+  --fd-input: #1a1a1a;
+  --fd-ring: #c5a059;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-brand-500);
+  color: var(--color-dark-950);
+}
+
+/* Custom Scrollbar - Theme aware */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-brand-800) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-brand-900);
+  border-radius: 10px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-brand-900);
+}
+
+html:not(.dark) ::-webkit-scrollbar-thumb {
+  background: var(--color-brand-300);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-brand-500);
+}

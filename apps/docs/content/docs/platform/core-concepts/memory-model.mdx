@@ -1,0 +1,140 @@
+---
+title: Memory Model
+description: The shape of a record, the role of lineage, and how snapshots compose into agent state.
+---
+
+import { Callout } from "@/components/callout";
+
+A sovseal **record** is the unit of memory. A **snapshot** is the unit of state. Records
+compose into snapshots; snapshots chain into lineage. Understanding these three layers
+is enough to predict every other behavior in the system.
+
+---
+
+## A record, in full
+
+```
+┌────────────────────────────── Record ──────────────────────────────┐
+│                                                                    │
+│  path           : "user.preferences.testing"      ← never sent      │
+│                                                     to the server   │
+│  path_hash      : sha256(path) = 0x4f3a…d801      ← what the server │
+│                                                     sees instead    │
+│                                                                    │
+│  payload        : { framework: "vitest", … }      ← canonicalized,  │
+│                                                     then encrypted  │
+│  embedding      : [0.12, -0.44, … 384 dims]       ← local only      │
+│                                                                    │
+│  ciphertext     : AES-256-GCM(payload, key, n)    ← what replicates │
+│  nonce          : 12 random bytes                                   │
+│  auth_tag       : 16 bytes (GCM)                                    │
+│                                                                    │
+│  parent_id      : 0x1a2b…c9d0                     ← lineage pointer │
+│  snapshot_id    : sha256(canonicalize(payload                       │
+│                          ‖ parent_id))                              │
+│  created_at     : 2026-05-21T14:32:08.117Z                          │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+Three things are worth highlighting:
+
+1. **`path` is local only.** The replication endpoint sees `path_hash` and cannot
+   reverse it. If you store `"strategy.long_btc.v3"`, the server cannot tell that
+   you store anything about BTC, longs, or strategies.
+2. **The embedding never leaves the device.** Even with self-hosted Postgres+pgvector,
+   the remote index stores encrypted vectors only.
+3. **`snapshot_id` is a content hash that includes the parent pointer.** This is what
+   makes lineage deterministic and tamper-evident.
+
+---
+
+## Snapshots and lineage
+
+A snapshot is an immutable state of the world at a point in time. Every snapshot
+points to its parent. The HEAD pointer names the current snapshot.
+
+```
+   snapshot₀ (genesis)
+        │
+        ▼
+   snapshot₁ ─── store_memory("user.testing.framework", "vitest")
+        │
+        ▼
+   snapshot₂ ─── store_memory("user.editor", "neovim")
+        │
+        ▼
+   snapshot₃ ─── store_memory("user.testing.framework", "vitest+playwright")
+        │              (overwrites; the v₁ record is still in the lineage)
+        ▼
+      HEAD
+```
+
+### Why parent-pointers, not version numbers
+
+Three reasons:
+
+- **Crash recovery is replay.** On restart, the SDK walks the lineage from the last
+  known durable HEAD and reconstructs in-memory state. No "is this corrupt?" branch.
+- **Multi-agent branching is free.** Fork a snapshot, give the branch to another
+  agent, merge later. Parent-pointers handle the DAG without coordination.
+- **Tamper detection is structural.** Because `snapshot_id` includes the parent's
+  ID, you can't substitute a snapshot in the middle of the chain without invalidating
+  every descendant.
+
+---
+
+## What composes into "state"
+
+```
+   state(HEAD) = fold(lineage from genesis → HEAD)
+               = latest record per (path) seen along the chain
+```
+
+So if you stored `"user.editor" = "vim"` at snapshot₁ and `"user.editor" = "neovim"`
+at snapshot₅, then `state(snapshot₇)` shows `"user.editor" = "neovim"`. The older
+record is **not deleted from lineage** — it's just shadowed by the newer one. This is
+what lets you `rollback(snapshot₃)` and get back the world as it looked at snapshot₃,
+byte-for-byte.
+
+<Callout type="info" title="Rollback ≠ destruction">
+`rollback(snapshot_n)` only moves the HEAD pointer back to `snapshot_n`. The snapshots
+between `snapshot_n` and the old HEAD remain in lineage and can be reached by forking
+or restoring the HEAD again. Nothing is destroyed.
+</Callout>
+
+---
+
+## How the model maps to the SDK
+
+| SDK call                   | What it does to the model                                     |
+| -------------------------- | ------------------------------------------------------------- |
+| `store(path, payload)`     | Creates a new record; appends a snapshot to HEAD              |
+| `recall(query, opts)`      | Vector-search across records reachable from HEAD              |
+| `delete(path)`             | Writes a tombstone record; the path stops appearing in recall |
+| `snapshot()`               | Returns the current HEAD snapshot ID                          |
+| `fork(snapshot_id)`        | Creates a branch with `snapshot_id` as the parent             |
+| `rollback(snapshot_id)`    | Moves HEAD pointer back to `snapshot_id`                      |
+
+---
+
+## Constraints you should design around
+
+- **Records are not blobs.** Payloads are canonicalized JSON before hashing and
+  encryption. If you want to store a 200 MB file, use object storage and put the
+  reference in sovseal.
+- **Paths are conceptual, not enforced as a tree.** `"a.b.c"` and `"a.b.d"` are
+  unrelated keys — there is no parent/child relationship in the path itself. Lineage
+  is the only graph the system tracks.
+- **Embeddings are an index, not the source of truth.** If you upgrade the embedder
+  model, the index must be rebuilt. The encrypted records are untouched.
+
+---
+
+## Next
+
+- [**store_memory**](/platform/core-concepts/store-memory) — how a write becomes a snapshot.
+- [**recall_memory**](/platform/core-concepts/recall-memory) — how a query becomes a result.
+- [**Verified Semantic Recall**](/platform/core-concepts/verified-semantic-recall) — the
+  cryptographic check on every read.
+- [**Deterministic lineage**](/platform/core-concepts/deterministic-lineage) — rollback, fork,
+  and crash recovery in detail.

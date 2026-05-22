@@ -1,0 +1,14 @@
+{
+  "title": "Self-Hosted",
+  "description": "Run the sovseal replication stack on your own infrastructure.",
+  "root": true,
+  "pages": [
+    "overview",
+    "--- Getting Started ---",
+    "deploy",
+    "configuration",
+    "--- Advanced Configuration ---",
+    "bring-your-own-storage",
+    "rest-surface"
+  ]
+}

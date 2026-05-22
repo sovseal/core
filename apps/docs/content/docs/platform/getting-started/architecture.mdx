@@ -1,0 +1,44 @@
+---
+title: Architecture Overview
+description: How sovseal keeps recall local, replication asynchronous, and the server permanently blind.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="info">
+sovseal is built around a single architectural commitment: **plaintext never leaves the
+device, and reads never touch the network.** Every other guarantee follows from that.
+</Callout>
+
+## The shape of a sovseal deployment
+
+```
+┌─────────────────────────── Agent Process ───────────────────────────┐
+│                                                                     │
+│   ┌──────────────┐   store    ┌────────────────────────────┐        │
+│   │  Your agent  │ ─────────► │  sovseal SDK / MCP server  │        │
+│   │  (LLM tool   │            │  ───────────────────────── │        │
+│   │   calls)     │ ◄───────── │  • LanceDB (vectors)       │        │
+│   └──────────────┘   recall   │  • Transformers.js (384-d) │        │
+│                               │  • AES-256-GCM (per record)│        │
+│                               └────────────┬───────────────┘        │
+│                                            │ write-behind           │
+│                                            │ (ciphertext only)      │
+└────────────────────────────────────────────┼────────────────────────┘
+                                             ▼
+                              ┌────────────────────────────┐
+                              │  Replication endpoint      │
+                              │  (Platform or self-hosted) │
+                              │  ───────────────────────── │
+                              │  Sees: ciphertext + SHA-256│
+                              │  path hashes. Nothing else.│
+                              └────────────────────────────┘
+```
+
+## What this page will cover
+
+- TODO: full request lifecycle for `store_memory` and `recall_memory`
+- TODO: where the embedding model lives and how it warms up
+- TODO: the encryption boundary diagrammed in detail
+- TODO: how write-behind replication recovers from network partitions
+- TODO: deterministic lineage and crash-recovery semantics

@@ -1,0 +1,39 @@
+---
+title: Platform & Edge (v2)
+description: Release notes for the SovSeal hosted platform — backend scale, edge functions, billing, and infrastructure changes.
+---
+
+import { Callout } from "@/components/callout";
+
+# Platform & Edge (v2)
+
+Release notes for the SovSeal hosted platform — backend scale, edge functions, billing, and infrastructure changes.
+
+---
+
+[​](https://docs.mem0.ai/changelog/platform#2026-05-10)
+
+### 2026-05-10
+
+#### Edge-Scaling & Low-Latency state restoration
+
+**Edge Functions — Pre-Warmed Endpoint Scaling**
+Our live cloud edge functions at `https://ksrlmubaxzwufziwarps.supabase.co/functions/v1/v2-agent-state` have been optimized for ultra-low latencies.
+
+- **Zero-Cold-Start Handlers** — Edge routes are permanently pre-warmed on global routing layers, cutting connection establishment times down to `<50ms`.
+- **Differential State Streaming** — Client SDKs can now stream delta state frames, reducing overall network egress by up to 60%.
+- **Robust SQS Pipelines** — Asynchronous state updates are queued via persistent message queues to guarantee durability.
+
+---
+
+[​](https://docs.mem0.ai/changelog/platform#2026-05-01)
+
+### 2026-05-01
+
+#### Postgres Schema & CDN Optimizations
+
+**Database & CDN — Cloud Storage Performance**
+Upgrades to the primary database schemas and asset storage configurations under Supabase project `sovseal`.
+
+- **Optimized Indexing** — Fine-tuned index keys in the `agent_state_snapshots` database table for fast high-frequency session lookups.
+- **Global CDN Caching** — The `sovseal-rom` public storage bucket now serves static, frozen agent state history directly from edge proxy locations.

@@ -1,0 +1,34 @@
+---
+title: Deterministic Lineage
+description: Every snapshot points to its parent. Crash, restart, and rollback are byte-equal operations.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+Full reference incoming. The core property: **every memory snapshot carries a pointer
+to its parent snapshot.** Replay the chain in order and you reconstruct any past state
+byte-for-byte.
+</Callout>
+
+## Lineage as a DAG
+
+```
+   snapshot₀ ── snapshot₁ ── snapshot₂ ── snapshot₃ (HEAD)
+       │            │            │
+       │            │            └─ store_memory("strategy.v3", …)
+       │            └─ store_memory("strategy.v2", …)
+       └─ store_memory("strategy.v1", …)
+
+   rollback(snapshot₂)  →  HEAD := snapshot₂      (no data lost; new HEAD pointer)
+   fork(snapshot₁)      →  branch with parent₁    (multi-agent divergent state)
+```
+
+## What this page will cover
+
+- TODO: snapshot identity (`sha256(canonicalize(payload || parent_id))`)
+- TODO: HEAD pointer semantics during concurrent writes
+- TODO: rollback vs. fork operations
+- TODO: crash recovery — how the SDK reconstructs HEAD on restart
+- TODO: how lineage interacts with write-behind replication
+- TODO: multi-agent branching for swarm/parallel agent topologies

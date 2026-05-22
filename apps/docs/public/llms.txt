@@ -1,0 +1,24 @@
+# Inheribase: Inheritance Infrastructure
+
+> Inheritance infrastructure that ensures your most important files reach the right people. Encrypted on your device, stored on Arweave's permanent storage network, delivered to your heirs automatically.
+
+## Core Platform
+- **Vaults**: Institutional-grade digital safes with zero-knowledge encryption.
+- **People**: Guardians (trusted recovery contacts) and Heirs (successors).
+- **Triggers**: Condition-based release (Dead Man's Switch, Guardian Claim).
+- **Permanence**: All data is stored on Arweave with a 200-year endowment.
+- **Privacy**: No human (including Inheribase) can decrypt vault contents without authorization.
+
+## AI-Assisted Estate Planning
+- **MCP Server**: Connect your local AI assistant (Claude Desktop, Cursor) to manage your vault via the Model Context Protocol.
+- **Heritage Assistant**: Your AI helps organize, encrypt, and store digital assets under your authority.
+- **Scoped Access**: AI tools use restricted API keys — they cannot modify your succession plan.
+
+## Core Directives
+- **Code is Reality**: Documentation is derived from the protocol's cryptographic truth.
+- **Human-First**: Your vault belongs to you. AI is a tool, not a tenant.
+
+## Reference Paths
+- [/getting-started](/getting-started): For humans starting their heritage journey.
+- [/agents/mcp-server](/agents/mcp-server): MCP integration for local AI assistants.
+- [/agents/api](/agents/api): Full REST API reference for developers.

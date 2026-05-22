@@ -1,0 +1,31 @@
+---
+title: Integrations Overview
+description: Drop sovseal into your existing agent stack in minutes.
+---
+
+import { Callout } from "@/components/callout";
+import { Card, Cards } from "@/components/card";
+
+<Callout type="info">
+Every integration on this page uses the same underlying primitive — **a local sovseal
+SDK or MCP server holding ciphertext memory.** The integration page only shows you the
+glue between your tool and that primitive.
+</Callout>
+
+## AI coding tools
+
+<Cards>
+  <Card title="Claude Desktop" href="/integrations/claude-desktop" description="MCP plugin · zero config" />
+  <Card title="Cursor" href="/integrations/cursor" description="MCP plugin · persistent session memory" />
+  <Card title="Windsurf" href="/integrations/windsurf" description="MCP plugin · multi-file context" />
+  <Card title="OpenClaw" href="/integrations/openclaw" description="MCP plugin · autonomous coding agents" />
+</Cards>
+
+## Agent frameworks
+
+<Cards>
+  <Card title="Vercel AI SDK" href="/integrations/vercel-ai-sdk" description="Tool calls wired to recall/store" />
+  <Card title="LangChain" href="/integrations/langchain" description="Memory module for LangChain chains" />
+  <Card title="OpenAI Agents SDK" href="/integrations/openai-agents-sdk" description="Drop-in memory tool" />
+  <Card title="Mastra" href="/integrations/mastra" description="Long-running agent state" />
+</Cards>

@@ -1,0 +1,167 @@
+---
+title: Verified Semantic Recall (VSR)
+description: Every restore re-derives sha256(canonicalize(payload)) and fails closed on mismatch. The cryptographic contract against memory poisoning.
+---
+
+import { Callout } from "@/components/callout";
+
+**Verified Semantic Recall** is the cryptographic check that runs on every read from
+the replication endpoint. It catches two distinct attacks:
+
+1. **Ciphertext tampering** — bit-flips, truncation, splicing — via the AES-256-GCM
+   authentication tag.
+2. **Wholesale substitution** — the server returns a *different* but cryptographically
+   valid record from another snapshot — via a SHA-256 audit closure.
+
+If either check fails, the read **fails closed**: the SDK returns an error and the
+agent does not see the record. There is no "best effort" fallback.
+
+<Callout type="info" title="Why two checks">
+AES-GCM auth tags are necessary but not sufficient. A malicious server could swap your
+record for a different record you wrote earlier — every byte authenticates correctly,
+but it's the wrong record. The SHA-256 audit closure binds the ciphertext to the
+**snapshot identity** the SDK expects, closing that gap.
+</Callout>
+
+---
+
+## The audit closure, end to end
+
+```
+   ┌─────────────────────── At write time ───────────────────────┐
+   │                                                             │
+   │  payload  ──► canonicalize  ──► payload_bytes               │
+   │                                       │                     │
+   │                                       ▼                     │
+   │           snapshot_id = sha256(payload_bytes ‖ parent_id)   │
+   │                                       │                     │
+   │  ciphertext = AES-256-GCM(payload_bytes, key, nonce)        │
+   │                                                             │
+   │  STORED LOCALLY:   { snapshot_id, ciphertext, nonce, tag }  │
+   │  SENT TO SERVER:   { snapshot_id, ciphertext, nonce, tag,   │
+   │                       path_hash, parent_id }                │
+   └─────────────────────────────────────────────────────────────┘
+
+                                ▼ (some time passes;
+                                   crash, restore, new device, …)
+
+   ┌────────────────────── At restore time ──────────────────────┐
+   │                                                             │
+   │  Server returns:  { snapshot_id, ciphertext, nonce, tag,    │
+   │                     parent_id }                             │
+   │                                                             │
+   │  STEP 1:  AES-256-GCM decrypt                               │
+   │           ─► if tag check fails: FAIL CLOSED  (tamper)      │
+   │                                                             │
+   │  STEP 2:  payload_bytes = canonicalize(decrypted)           │
+   │           expected_id  = sha256(payload_bytes ‖ parent_id)  │
+   │           ─► if expected_id ≠ snapshot_id: FAIL CLOSED      │
+   │                                            (substitution)   │
+   │                                                             │
+   │  STEP 3:  payload returned to caller                        │
+   │                                                             │
+   └─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## What each check catches
+
+| Attack                                          | Caught by                | How                                                         |
+| ----------------------------------------------- | ------------------------ | ----------------------------------------------------------- |
+| Single bit flipped in ciphertext                | AES-GCM auth tag         | Tag verification fails, decrypt rejects                     |
+| Ciphertext truncated or extended                | AES-GCM auth tag         | Tag verification fails                                      |
+| Two valid records swapped at the server         | SHA-256 audit closure    | `sha256(payload ‖ parent_id)` doesn't match `snapshot_id`   |
+| Old snapshot replayed in place of a new one     | SHA-256 audit closure (via `parent_id`) | Parent pointer doesn't match expected lineage  |
+| Server returns a record from a different project | AES-GCM key isolation   | Wrong key → tag verification fails                          |
+| Server returns nothing / 404                    | Caller code              | Distinguishable from VSR failure; handle as missing data    |
+
+---
+
+## Calling code
+
+You don't call VSR directly — it runs on every restore. But you do need to handle
+its failure mode.
+
+```ts
+import { Sovseal, VsrFailureError } from "@sovseal/sdk";
+
+const memory = new Sovseal({ apiKey: process.env.SOVSEAL_API_KEY });
+await memory.ready();
+
+try {
+  const hits = await memory.recall("trading strategy parameters", { topK: 3 });
+  applyStrategy(hits[0].payload);
+} catch (err) {
+  if (err instanceof VsrFailureError) {
+    // The server returned a record that doesn't match its expected snapshot id,
+    // OR the AES-GCM tag failed verification. DO NOT proceed.
+    log.error("VSR failure", {
+      expected: err.expectedSnapshotId,
+      received: err.receivedSnapshotId,
+      reason:   err.reason,   // "AUTH_TAG_MISMATCH" | "SNAPSHOT_ID_MISMATCH"
+    });
+    quarantineAndPage();
+    return;
+  }
+  throw err;
+}
+```
+
+---
+
+## When VSR runs (and when it doesn't)
+
+| Operation                              | Runs VSR? | Why                                                       |
+| -------------------------------------- | --------- | --------------------------------------------------------- |
+| `recall(...)` against local index      | **No**    | Local LanceDB is trusted (filesystem, not network)        |
+| First-launch restore from replication  | **Yes**   | All records pulled from server are verified before commit |
+| Multi-device sync (new device pulls)   | **Yes**   | Same as cold restore                                      |
+| Crash recovery from local outbox       | **No**    | Records were already verified at original write time      |
+| Manual `import` of a backup            | **Yes**   | Same code path as restore                                 |
+
+<Callout type="info" title="Why local recall doesn't re-verify">
+The local LanceDB index is part of your trust boundary — if an attacker can write
+arbitrary bytes to `~/.sovseal/db/` they have already won. VSR is about defending
+against the *network* (the server, MITM, supply-chain compromise of the replication
+endpoint). If you want belt-and-suspenders verification on every local recall, enable
+`SOVSEAL_VERIFY_LOCAL_READS=1` — expect a 4–8x recall latency increase.
+</Callout>
+
+---
+
+## Limits — what VSR does NOT protect against
+
+- **Compromised device.** If your AES-256 key is exfiltrated, VSR still passes —
+  the attacker can forge valid records.
+- **A weak or guessable passphrase.** Key derivation is only as strong as the secret
+  it derives from. See [Key Derivation](/components/encryption/key-derivation).
+- **Out-of-band replay.** VSR confirms a record is what you wrote, but cannot confirm
+  it's the *most recent* version of that path. For freshness, use lineage HEAD
+  pointers, not VSR.
+- **Denial of service.** A malicious server can refuse to return your records. VSR
+  doesn't prevent that — it only ensures that if you do get records back, they're
+  authentic.
+
+---
+
+## Operational guidance
+
+- **Treat any VSR failure as an incident.** It means either the replication endpoint
+  has been compromised or your local state is wrong. Both warrant immediate
+  investigation.
+- **Quarantine, don't retry.** Retrying a VSR failure rarely helps and may amplify
+  damage if the server is actively malicious. Surface the error, page a human.
+- **Log the snapshot IDs.** When VSR fails, log `expectedSnapshotId` and
+  `receivedSnapshotId`. This is the forensic evidence needed to reproduce.
+
+---
+
+## Next
+
+- [**Zero-knowledge guarantees**](/platform/core-concepts/zero-knowledge) — the broader
+  cryptographic contract VSR sits inside.
+- [**Deterministic lineage**](/platform/core-concepts/deterministic-lineage) — why
+  parent-pointers make substitution detectable.
+- [**Components → AES-256-GCM**](/components/encryption/aes-256-gcm) — primitive-level
+  detail on the auth tag.

@@ -1,0 +1,18 @@
+---
+title: Postgres + pgvector (Self-Hosted Replication)
+description: Optional remote vector index for self-hosted multi-device deployments.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="info">
+Even with pgvector enabled, **recall still resolves locally.** pgvector exists to
+accelerate cold-restore on new devices, not to serve query traffic.
+</Callout>
+
+## What this page will cover
+
+- TODO: when (and when not) to enable pgvector
+- TODO: schema migrations
+- TODO: index sizing
+- TODO: keeping the server blind even while serving an embedding index (encrypted vectors)

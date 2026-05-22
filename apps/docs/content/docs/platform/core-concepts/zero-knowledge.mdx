@@ -1,0 +1,42 @@
+---
+title: Zero-Knowledge Guarantees
+description: What the sovseal replication server can see, what it cannot see, and why.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+This page documents the cryptographic contract between your device and the replication
+endpoint. The short version: **the server only ever holds AES-256-GCM ciphertext and
+SHA-256 path hashes.** It cannot read records, cannot enumerate key names, and cannot
+be coerced into doing either.
+</Callout>
+
+## What the server sees vs. cannot see
+
+```
+                      ┌─────────────────────────────────┐
+                      │  Replication server's view      │
+                      ├─────────────────────────────────┤
+SEES         ►        │  • ciphertext bytes             │
+                      │  • SHA-256(path) — opaque hash  │
+                      │  • project_id (auth scope)      │
+                      │  • content length               │
+                      │  • timestamp                    │
+                      ├─────────────────────────────────┤
+CANNOT SEE   ►        │  • plaintext content            │
+                      │  • path / key name              │
+                      │  • embedding vector             │
+                      │  • the encryption key           │
+                      │  • metadata fields              │
+                      └─────────────────────────────────┘
+```
+
+## What this page will cover
+
+- TODO: formal threat model (attacker models: passive observer, malicious server, key
+  compromise, ciphertext substitution)
+- TODO: why SHA-256 path hashing prevents enumeration but still allows replication idempotency
+- TODO: the role of AES-256-GCM auth tags vs. the SHA-256 audit closure
+- TODO: what `fail-closed` means in practice during recall
+- TODO: limits — what zero-knowledge does NOT protect against (compromised device, weak passphrase)

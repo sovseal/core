@@ -1,0 +1,24 @@
+{
+  "title": "Platform",
+  "description": "Managed sovseal — production-grade replication, zero-ops.",
+  "root": true,
+  "pages": [
+    "overview",
+    "--- Getting Started ---",
+    "getting-started/introduction",
+    "getting-started/quickstart",
+    "getting-started/platform-vs-self-hosted",
+    "getting-started/architecture",
+    "--- Core Concepts ---",
+    "core-concepts/memory-model",
+    "core-concepts/store-memory",
+    "core-concepts/recall-memory",
+    "core-concepts/zero-knowledge",
+    "core-concepts/deterministic-lineage",
+    "core-concepts/verified-semantic-recall",
+    "--- Features & Ops ---",
+    "features/billing-and-credits",
+    "features/monitoring-and-logs",
+    "features/limits-and-slas"
+  ]
+}

@@ -1,0 +1,205 @@
+---
+title: store_memory
+description: Write-behind replication — the local commit returns in milliseconds; ciphertext sync happens in the background.
+---
+
+import { Callout } from "@/components/callout";
+import { Tab, Tabs } from "@/components/tabs";
+
+`store_memory` writes a record to the local LanceDB index and returns. It does **not**
+wait for the replication endpoint. The contract is "durable locally, eventually
+durable remotely" — a write-behind pattern with a transactional local commit.
+
+This is the single most important operational property of sovseal: **no tool call
+ever blocks on I/O.**
+
+---
+
+## The contract
+
+| Property                      | Guarantee                                                    |
+| ----------------------------- | ------------------------------------------------------------ |
+| Local durability on return    | **Yes** — fsync'd to disk before the call returns            |
+| Remote durability on return   | **No** — replication is asynchronous                         |
+| Latency p50                   | **3.8 ms**                                                   |
+| Latency p95                   | 7.2 ms                                                       |
+| Latency p99                   | 12.5 ms                                                      |
+| Network behavior              | **0 RTT on the call path** — replication is a background job |
+| Failure mode if replication is offline | Buffered locally; flushed when the network returns  |
+
+---
+
+## The write pipeline, end to end
+
+```
+   ┌───────────────────────────────────────────────────────────────────┐
+   │                          Application                              │
+   │                                                                   │
+   │   await memory.store("user.editor", { value: "neovim" })          │
+   │                              │                                    │
+   └──────────────────────────────┼────────────────────────────────────┘
+                                  ▼
+   ┌───────────────────────────────────────────────────────────────────┐
+   │                          sovseal SDK                              │
+   │                                                                   │
+   │   1. canonicalize(payload)       ─►  stable JSON bytes            │
+   │   2. embed(payload)              ─►  384-d vector                 │
+   │   3. encrypt(payload, key, n)    ─►  ciphertext + auth_tag        │
+   │   4. snapshot_id =                                                │
+   │      sha256(canonicalize(payload) ‖ parent_id)                    │
+   │   5. lancedb.upsert({ id, embedding, ciphertext, … })             │
+   │   6. fsync                                                        │
+   │   7. enqueue(replication_job)                                     │
+   │   8. return  ◄────────────────────────────── caller resumes here  │
+   │                                                                   │
+   └──────────────────────────────┬────────────────────────────────────┘
+                                  │ (background, write-behind)
+                                  ▼
+   ┌───────────────────────────────────────────────────────────────────┐
+   │                  Replication worker (in-process)                  │
+   │                                                                   │
+   │   • Batch up to N jobs (default 32 or 250ms)                      │
+   │   • POST /v2/replicate/push { records: [ … ] }                    │
+   │   • On 2xx:  mark records as replicated                           │
+   │   • On 4xx:  surface to telemetry, do not retry                   │
+   │   • On 5xx / network error:  exponential backoff, infinite retry  │
+   │                                                                   │
+   └───────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Calling it
+
+<Tabs items={["Node SDK", "MCP tool", "cURL (self-hosted REST)"]}>
+
+```ts tab="Node SDK"
+import { Sovseal } from "@sovseal/sdk";
+
+const memory = new Sovseal({ apiKey: process.env.SOVSEAL_API_KEY });
+await memory.ready();
+
+const result = await memory.store("user.preferences.testing", {
+  framework: "vitest",
+  reason: "ESM-native; faster cold start than Jest",
+});
+
+console.log(result.snapshotId);   // e.g. "snap_4f3ad8…"
+console.log(result.replicated);   // false — write-behind, expected
+```
+
+```json tab="MCP tool"
+// Tool call payload sent by the AI client
+{
+  "name": "store_memory",
+  "arguments": {
+    "path": "user.preferences.testing",
+    "payload": {
+      "framework": "vitest",
+      "reason": "ESM-native; faster cold start than Jest"
+    }
+  }
+}
+
+// Response
+{
+  "success": true,
+  "data": {
+    "snapshot_id": "snap_4f3ad8…",
+    "replicated": false
+  },
+  "timestamp": 1716301928117
+}
+```
+
+```bash tab="cURL (self-hosted REST)"
+# This is what the SDK does under the hood, in background batches.
+# You almost never call this directly.
+
+curl -X POST https://your-endpoint/v2/replicate/push \
+  -H "Authorization: Bearer sov_live_…" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "records": [{
+      "path_hash":   "4f3ad801…",
+      "ciphertext":  "base64…",
+      "nonce":       "base64…",
+      "auth_tag":    "base64…",
+      "parent_id":   "snap_1a2bc9d0…",
+      "snapshot_id": "snap_4f3ad8…"
+    }]
+  }'
+```
+
+</Tabs>
+
+---
+
+## Parameters
+
+| Param      | Type                | Required | Notes                                                          |
+| ---------- | ------------------- | -------- | -------------------------------------------------------------- |
+| `path`     | `string`            | ✓        | Logical key. Never sent to the server (only `sha256(path)` is). |
+| `payload`  | `object` or `string` | ✓       | Canonicalized to JSON before hashing & encryption.             |
+| `metadata` | `object`            |          | Searchable, **encrypted** alongside the payload.               |
+| `parent`   | `string` (snapshot id) |       | Override HEAD as the parent (used by `fork`).                  |
+
+---
+
+## Failure modes — and what happens
+
+| Failure                              | What the SDK does                                                |
+| ------------------------------------ | ---------------------------------------------------------------- |
+| Local disk is full                   | `store` **rejects** before fsync; the snapshot is not created    |
+| Embedder is still warming up         | `await memory.ready()` resolves first; the call queues briefly   |
+| Replication endpoint returns 401     | Surfaced via `memory.on("replication-error", …)`; local write is unaffected |
+| Replication endpoint returns 5xx     | Exponential backoff, infinite retry; records remain in the local outbox |
+| Network is offline                   | Same as 5xx — buffered locally, flushed on reconnect             |
+| Process crashes between commit & ack | Records survive in the outbox; next process start re-flushes    |
+
+<Callout type="warning" title="Backpressure">
+If replication falls far enough behind that the local outbox grows past
+`maxOutboxBytes` (default 256 MB), `store` begins to block until the worker drains.
+This is the only condition under which a write can stall.
+</Callout>
+
+---
+
+## What gets sent to the server
+
+```
+   POST /v2/replicate/push
+
+   {
+     "records": [
+       {
+         "path_hash":   "sha256(path)",                 ← NOT the path itself
+         "ciphertext":  "AES-256-GCM(payload, key)",    ← server cannot decrypt
+         "nonce":       "...",
+         "auth_tag":    "...",
+         "parent_id":   "...",
+         "snapshot_id": "...",
+         "created_at":  "..."
+       }
+     ]
+   }
+```
+
+What is NOT sent:
+- The path itself
+- The plaintext payload
+- The encryption key
+- The embedding vector
+- Any metadata not explicitly serialized into the payload
+
+This is enforced at the SDK boundary. If you want to verify, run with
+`SOVSEAL_LOG_REPLICATION_BODIES=1` and inspect the requests.
+
+---
+
+## Next
+
+- [**recall_memory**](/platform/core-concepts/recall-memory) — how stored records become query results.
+- [**Verified Semantic Recall**](/platform/core-concepts/verified-semantic-recall) — what
+  prevents a malicious server from substituting your ciphertext on restore.
+- [**Replication & Sync**](/platform/features/replication-sync) — deep dive on the background worker.

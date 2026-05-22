@@ -1,0 +1,18 @@
+{
+  "title": "Integrations",
+  "description": "Drop sovseal into your existing agent stack.",
+  "root": true,
+  "pages": [
+    "overview",
+    "--- AI Coding Tools ---",
+    "claude-desktop",
+    "cursor",
+    "windsurf",
+    "openclaw",
+    "--- Agent Frameworks ---",
+    "vercel-ai-sdk",
+    "langchain",
+    "openai-agents-sdk",
+    "mastra"
+  ]
+}

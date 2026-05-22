@@ -1,0 +1,23 @@
+---
+title: Authentication
+description: How to authenticate against the sovseal replication API.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+Full authentication reference incoming. See [Platform → Auth & Tokens](/platform/features/auth-and-tokens)
+for the token taxonomy.
+</Callout>
+
+## Header format
+
+```http
+Authorization: Bearer sov_live_<...>
+```
+
+## What this page will cover
+
+- TODO: per-token-type capability matrix
+- TODO: signature verification for self-hosted deployments
+- TODO: how to detect and respond to `AUTH_INVALID` and `AUTH_INSUFFICIENT`

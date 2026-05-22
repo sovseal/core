@@ -1,0 +1,38 @@
+---
+title: Claude Desktop
+description: Give Claude Desktop persistent, local-only memory via the sovseal MCP server.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="info">
+Setup is one JSON block in `claude_desktop_config.json`. No signup, no API key. First
+launch creates `~/.sovseal/config.json` with a project token and an AES-256 key — both
+stay on your device.
+</Callout>
+
+## Install
+
+Add this to `~/Library/Application Support/Claude/claude_desktop_config.json`
+(or the equivalent path on Windows/Linux):
+
+```json
+{
+  "mcpServers": {
+    "sovseal-memory": {
+      "command": "npx",
+      "args": ["-y", "@sovseal/mcp-server"]
+    }
+  }
+}
+```
+
+Restart Claude Desktop. The `store_memory` and `recall_memory` tools will appear in
+the tool list.
+
+## What this page will expand to
+
+- TODO: verifying the install (first tool call, where ciphertext is written)
+- TODO: model warmup behavior on first launch (~30 MB download to `~/.sovseal/models/`)
+- TODO: configuring replication against the Platform or a self-hosted endpoint
+- TODO: troubleshooting (MCP server not connecting, model warmup timeouts)

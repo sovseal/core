@@ -1,0 +1,68 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": [
+    "NODE_ENV",
+    "NEXT_PUBLIC_CONTRACT_ADDRESS",
+    "NEXT_PUBLIC_RPC_ENDPOINT",
+    "NEXT_PUBLIC_NETWORK",
+    "NEXT_PUBLIC_RECOVERY_CONTRACT_ADDRESS",
+    "NEXT_PUBLIC_PRIVY_APP_ID",
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "NEXT_PUBLIC_PIMLICO_API_KEY",
+    "NEXT_PUBLIC_ZERODEV_PROJECT_ID",
+    "NEXT_PUBLIC_GASLESS_ENABLED",
+    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY",
+    "GOOGLE_KMS_KEY",
+    "GOOGLE_KMS_LOCATION",
+    "GOOGLE_CLOUD_PROJECT",
+    "CRON_SECRET",
+    "LEMONSQUEEZY_API_KEY",
+    "GOOGLE_KMS_KEYRING",
+    "GOOGLE_SERVICE_ACCOUNT_JSON",
+    "DEPLOYER_PRIVATE_KEY",
+    "UPSTASH_REDIS_REST_URL",
+    "UPSTASH_REDIS_REST_TOKEN",
+    "NEXT_PUBLIC_MAINTENANCE_MODE",
+    "MAINTENANCE_MODE"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*",
+        "next.config.mjs",
+        "next.config.js"
+      ],
+      "outputs": [".next/**", "!.next/cache/**", "out/**", "dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "dev:dashboard": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^lint"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "tsconfig.json",
+        "!**/__tests__/**",
+        "!**/*.test.ts",
+        "!**/*.test.tsx"
+      ],
+      "outputs": ["tsconfig.tsbuildinfo", ".tsbuildinfo"]
+    }
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "memories": [
+    "React 19 introduces support for async transitions, document metadata, and server actions.",
+    "Solidity smart contracts compile under Foundry with robust fuzz testing configurations.",
+    "The capital of France is Paris, located on the Seine River in the north-central part of the country.",
+    "Earth orbits the Sun once every 365.25 days, which requires a leap year adjustment every four years.",
+    "Sourdough bread requires a wild yeast starter culture instead of commercial baker's yeast.",
+    "Photosynthesis is the chemical process by which green plants convert light energy into chemical energy.",
+    "The speed of light in a vacuum is approximately 299,792 kilometers per second, a universal physical constant.",
+    "William Shakespeare wrote Hamlet, Romeo and Juliet, Macbeth, and many other famous plays and sonnets.",
+    "The favorite color of the user is deep ocean blue, evoking calm and depth.",
+    "Peanuts and tree nuts trigger a severe allergic reaction (anaphylaxis) for the user.",
+    "Mount Everest is the highest mountain above sea level, reaching an elevation of 8,848 meters.",
+    "Boba tea originated in Taiwan during the 1980s and has since become a global beverage phenomenon.",
+    "Rust achieves memory safety without a garbage collector through its ownership and borrowing system.",
+    "The Golden Gate Bridge is a suspension bridge spanning the golden gate strait in California.",
+    "Quantum computing leverages superposition and entanglement to perform complex computations faster.",
+    "Coffee beans are actually the seeds of berries from the Coffea plant species.",
+    "The Great Wall of China was constructed across historical northern borders to protect against invasions.",
+    "The human heart beats approximately 100,000 times a day, pumping blood through the circulatory system.",
+    "A standard chess board has 64 squares of alternating light and dark colors in an 8x8 grid.",
+    "The Renaissance was a fervent period of European cultural, artistic, political, and scientific rebirth.",
+    "Honey never spoils; archaeologists have found pots of edible honey in ancient Egyptian tombs.",
+    "Decentralized identifiers allow sovereign entities to assert cryptographically secure identity.",
+    "Upstash Redis is a serverless database offering low latency caching and rate limiting capabilities.",
+    "The Mediterranean diet emphasizes olive oil, whole grains, vegetables, and lean proteins.",
+    "Mars is often referred to as the Red Planet due to the iron oxide prevalent on its surface.",
+    "The Amazon Rainforest produces a significant portion of the oxygen in Earth's atmosphere.",
+    "Symmetric key encryption uses the same cryptographic key for both encryption and decryption.",
+    "Llama 3 is a highly capable large language model developed by Meta for diverse text tasks.",
+    "The first successful powered airplane flight was achieved by the Wright brothers in 1903.",
+    "Vanilla CSS remains the most flexible styling solution for clean and lightweight web apps.",
+    "Water has a chemical formula of H2O and is composed of two hydrogen atoms and one oxygen atom.",
+    "The Eiffel Tower in Paris was originally constructed as the entrance arch for the 1889 World's Fair.",
+    "An atom consists of a central nucleus surrounded by a cloud of negatively charged electrons.",
+    "The Pacific Ocean is the largest and deepest of Earth's oceanic divisions.",
+    "DNA contains the genetic instructions used in the development and functioning of all living organisms.",
+    "A light-year is the distance that light travels in one vacuum year, about 9.46 trillion kilometers.",
+    "The Mona Lisa was painted by Leonardo da Vinci during the Italian Renaissance.",
+    "An electric motor converts electrical energy into mechanical energy through electromagnetic interactions.",
+    "Bananas are naturally radioactive because they contain high amounts of potassium isotopes.",
+    "The Gutenberg press revolutionized printing in Europe by introducing movable type technology.",
+    "Beethoven composed his famous Ninth Symphony while completely deaf, including the Ode to Joy.",
+    "A standard piano has 88 keys, including 52 white keys and 36 black keys.",
+    "The internet grew out of ARPANET, a military network established in the United States in the late 1960s.",
+    "Micro-animations on buttons and cards significantly improve user engagement and premium feel.",
+    "Arweave provides permanent, decentralized data storage using a novel blockweave architecture.",
+    "LanceDB is an open-source, serverless vector database designed for AI applications and fast queries.",
+    "The Magna Carta, signed in 1215, established the principle that everyone is subject to the law.",
+    "A tsunami is a series of giant ocean waves caused by underwater earthquakes or volcanic eruptions.",
+    "Gold is a highly malleable, dense, and non-reactive chemical element with the symbol Au.",
+    "The Great Barrier Reef is the largest coral reef system on Earth, located in Australia.",
+    "A standard soccer match consists of two halves of 45 minutes each, totaling 90 minutes.",
+    "Machu Picchu is an ancient Incan citadel situated high in the Andes Mountains of Peru.",
+    "Spaghetti carbonara is a classic Roman pasta dish made with eggs, pecorino cheese, and guanciale.",
+    "The CPU performs the basic arithmetic, logical, and input/output operations of a computer system.",
+    "The standard gravity on Earth is approximately 9.81 meters per second squared.",
+    "A leap year occurs every four years to keep our calendar aligned with the astronomical year.",
+    "The US declaration of independence was adopted by Congress on July 4, 1776.",
+    "JavaScript is a prototype-based, multi-paradigm, single-threaded programming language.",
+    "The primary key in a database uniquely identifies each record in a table.",
+    "A black hole is a region of spacetime where gravity is so strong that nothing can escape it.",
+    "A normal human pregnancy lasts for approximately 40 weeks, divided into three trimesters.",
+    "Penguins are flightless birds that spend about half of their lives on land and half in oceans.",
+    "The Colosseum in Rome could hold an estimated 50,000 to 80,000 spectators for gladiatorial games.",
+    "The periodic table organizes all known chemical elements by their atomic number and electron properties.",
+    "An api key is a unique identifier used to authenticate requests in software development.",
+    "The Taj Mahal in India is an ivory-white marble mausoleum built by Emperor Shah Jahan.",
+    "A typical computer keyboard layout is known as QWERTY, named after the first six letters.",
+    "An algorithm is a finite sequence of well-defined instructions to solve a specific problem.",
+    "The Moon is Earth's only natural satellite and completes an orbit every 27.3 days.",
+    "Baking soda is also known as sodium bicarbonate, a chemical compound with the formula NaHCO3.",
+    "A marathon is a long-distance running race with an official distance of 42.195 kilometers.",
+    "The human genome consists of approximately 3 billion base pairs of DNA.",
+    "A spider has eight legs and spin silk webs to capture prey.",
+    "The French Revolution began in 1789 with the storming of the Bastille in Paris.",
+    "A thermal camera detects infrared radiation emitted by objects based on their temperature.",
+    "The solar system consists of eight major planets, including four terrestrial and four gas giants.",
+    "A standard acoustic guitar typically has six strings tuned to E, A, D, G, B, and E.",
+    "The Statue of Liberty was a gift from France to the United States, dedicated in 1886.",
+    "Scurvy is a disease caused by a severe deficiency of vitamin C in the diet.",
+    "The theory of relativity, developed by Albert Einstein, revolutionized modern physics.",
+    "A standard deck of playing cards contains 52 cards across four suits.",
+    "The Nile River is historically considered the longest river in the world, flowing through Africa.",
+    "A compiler translates source code written in a high-level language into machine code.",
+    "The Sahara is the largest hot desert in the world, covering much of Northern Africa.",
+    "An optical prism can split white light into its component spectral colors through refraction.",
+    "The system configuration uses environment variables to store sensitive keys securely.",
+    "A barcode reader uses a laser beam to read the reflected light from black and white bars.",
+    "The Great Sphinx of Giza is a limestone statue of a mythical creature with a lion's body.",
+    "An isotope is an atom with the same number of protons but a different number of neutrons.",
+    "The Olympic Games are held every four years, bringing together athletes from all nations.",
+    "An escrow is a financial arrangement where a third party holds assets during a transaction.",
+    "A compass indicates direction relative to the Earth's magnetic poles using a magnetized needle.",
+    "The Gutenberg Bible was the first major book printed in Europe using movable metal type.",
+    "A submarine operates underwater by adjusting its buoyancy using ballast tanks.",
+    "The Milky Way is the galaxy that contains our Solar System, with billions of stars.",
+    "An autoclave is a machine that uses steam under pressure to sterilize equipment and supplies.",
+    "The Titanic sank in 1912 after striking an iceberg during its maiden voyage.",
+    "A database transaction represents a unit of work that must succeed or fail as a whole.",
+    "The Doppler effect is the change in frequency of a wave in relation to an observer.",
+    "A standard soccer ball has 32 panels, including 20 hexagons and 12 pentagons."
+  ],
+  "queries": [
+    {
+      "query": "React updates for asynchronous state change and server actions",
+      "expected_match": "React 19 introduces support for async transitions, document metadata, and server actions."
+    },
+    {
+      "query": "Foundry Solidity compiler configuration and smart contract testing",
+      "expected_match": "Solidity smart contracts compile under Foundry with robust fuzz testing configurations."
+    },
+    {
+      "query": "which city is the capital of France on the Seine river",
+      "expected_match": "The capital of France is Paris, located on the Seine River in the north-central part of the country."
+    },
+    {
+      "query": "why do we adjust our calendars with a leap day",
+      "expected_match": "Earth orbits the Sun once every 365.25 days, which requires a leap year adjustment every four years."
+    },
+    {
+      "query": "baking bread using wild yeast starter cultures",
+      "expected_match": "Sourdough bread requires a wild yeast starter culture instead of commercial baker's yeast."
+    },
+    {
+      "query": "how do green plants convert light into chemical energy",
+      "expected_match": "Photosynthesis is the chemical process by which green plants convert light energy into chemical energy."
+    },
+    {
+      "query": "physical constant for the speed of light in a vacuum",
+      "expected_match": "The speed of light in a vacuum is approximately 299,792 kilometers per second, a universal physical constant."
+    },
+    {
+      "query": "William Shakespeare plays and theatrical works like Hamlet",
+      "expected_match": "William Shakespeare wrote Hamlet, Romeo and Juliet, Macbeth, and many other famous plays and sonnets."
+    },
+    {
+      "query": "what is the favorite color of the user",
+      "expected_match": "The favorite color of the user is deep ocean blue, evoking calm and depth."
+    },
+    {
+      "query": "user food allergies and severe nut reactions",
+      "expected_match": "Peanuts and tree nuts trigger a severe allergic reaction (anaphylaxis) for the user."
+    },
+    {
+      "query": "elevation of Mount Everest above sea level",
+      "expected_match": "Mount Everest is the highest mountain above sea level, reaching an elevation of 8,848 meters."
+    },
+    {
+      "query": "global tea beverage originating from Taiwan in the eighties",
+      "expected_match": "Boba tea originated in Taiwan during the 1980s and has since become a global beverage phenomenon."
+    },
+    {
+      "query": "Rust compiler ownership and borrowing system memory safety",
+      "expected_match": "Rust achieves memory safety without a garbage collector through its ownership and borrowing system."
+    },
+    {
+      "query": "quantum superposition and entanglement computers",
+      "expected_match": "Quantum computing leverages superposition and entanglement to perform complex computations faster."
+    },
+    {
+      "query": "Upstash Redis low latency caching rate limiting",
+      "expected_match": "Upstash Redis is a serverless database offering low latency caching and rate limiting capabilities."
+    },
+    {
+      "query": "Vanilla CSS lightweight styling web app versatility",
+      "expected_match": "Vanilla CSS remains the most flexible styling solution for clean and lightweight web apps."
+    },
+    {
+      "query": "permanent blockweave storage from Arweave",
+      "expected_match": "Arweave provides permanent, decentralized data storage using a novel blockweave architecture."
+    },
+    {
+      "query": "LanceDB open-source serverless vector DB AI applications",
+      "expected_match": "LanceDB is an open-source, serverless vector database designed for AI applications and fast queries."
+    },
+    {
+      "query": "Albert Einstein theory of relativity modern physics",
+      "expected_match": "The theory of relativity, developed by Albert Einstein, revolutionized modern physics."
+    },
+    {
+      "query": "database transaction acid unit of work properties",
+      "expected_match": "A database transaction represents a unit of work that must succeed or fail as a whole."
+    }
+  ]
+}

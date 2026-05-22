@@ -1,0 +1,14 @@
+{
+  "title": "Cookbooks",
+  "description": "Production-ready patterns for shipping agents with persistent, verifiable memory.",
+  "root": true,
+  "pages": [
+    "overview",
+    "--- Agent Playbooks ---",
+    "financial-trading-agent",
+    "healthcare-copilot",
+    "--- Security & Productivity ---",
+    "threat-detection-with-vsr",
+    "dev-productivity-session-memory"
+  ]
+}

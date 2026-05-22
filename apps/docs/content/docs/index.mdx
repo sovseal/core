@@ -1,0 +1,90 @@
+---
+title: Build with sovseal
+description: Local-first, zero-knowledge memory layer for AI agents. 0-RTT recall, AES-256-GCM ciphertext replication, cryptographically verified state.
+icon: Rocket
+full: true
+---
+
+import { Card, Cards } from "@/components/card";
+import {
+  Cloud,
+  Server,
+  BookOpen,
+  Plug,
+  Code2,
+  Webhook,
+  Boxes,
+} from "lucide-react";
+
+<div className="flex flex-col items-center text-center my-12">
+  <h1 className="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
+    Build with sovseal
+  </h1>
+  <p className="text-fd-muted-foreground text-lg max-w-2xl">
+    Local-first, zero-knowledge memory layer for AI agents.
+  </p>
+  <a
+    href="/platform/getting-started/quickstart"
+    className="text-fd-foreground mt-6 inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
+  >
+    Write your first memory →
+  </a>
+</div>
+
+<Cards>
+  <Card
+    icon={<Cloud />}
+    title="sovseal Platform"
+    href="/platform/overview"
+    description="Managed memory with production-scale infrastructure, ready in minutes."
+  />
+  <Card
+    icon={<Server />}
+    title="Self-Hosted"
+    href="/self-hosted/overview"
+    description="Run the sovseal stack on your own infrastructure with full control over data, deployment, and customization."
+  />
+  <Card
+    icon={<BookOpen />}
+    title="Cookbooks"
+    href="/cookbooks/overview"
+    description="Production-ready recipes that show how to ship verifiable agent memory."
+  />
+  <Card
+    icon={<Plug />}
+    title="Integrations"
+    href="/integrations/overview"
+    description="Connect sovseal to Claude Desktop, Cursor, LangChain, Vercel AI SDK, and more."
+  />
+  <Card
+    icon={<Code2 />}
+    title="SDK Reference"
+    href="/sdk-reference/overview"
+    description="@sovseal/sdk and @sovseal/mcp-server — types, methods, error taxonomy."
+  />
+  <Card
+    icon={<Webhook />}
+    title="API Reference"
+    href="/api-reference/overview"
+    description="Every REST endpoint of the replication surface, with payload examples."
+  />
+  <Card
+    icon={<Boxes />}
+    title="Components"
+    href="/components/overview"
+    description="Pluggable embedders, vector stores, and encryption primitives."
+  />
+</Cards>
+
+---
+
+## Why local-first
+
+| Property                | Network-bound competitors              | sovseal                              |
+| ----------------------- | -------------------------------------- | ------------------------------------ |
+| Recall latency p99      | 100ms–800ms (HTTP)                     | **21.8 ms** (local query)            |
+| Network round-trips     | 1 per recall                           | **0**                                |
+| Server sees content     | Yes (plaintext or "encrypted at rest") | **No** (ciphertext only)             |
+| Server enumerates paths | Yes                                    | **No** (SHA-256 path hash)           |
+| Crash recovery          | "Best effort"                          | **Deterministic** (lineage replay)   |
+| Tamper detection        | None                                   | **VSR audit closure**                |

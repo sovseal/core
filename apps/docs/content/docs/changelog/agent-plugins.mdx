@@ -1,0 +1,39 @@
+---
+title: Agent Plugins
+description: Release notes and setup guides for Claude Code, Cursor, and Codex editor memory plugins.
+---
+
+import { Callout } from "@/components/callout";
+
+# Agent Plugins
+
+Release notes for the Model Context Protocol (MCP) plugins, Claude Code integrations, and Cursor desktop memory extensions.
+
+---
+
+[​](https://docs.mem0.ai/changelog/agent-plugins#2026-05-18)
+
+### 2026-05-18
+
+#### Claude Code Native Integration
+
+**Claude Code Native Integration — Encrypted Memory Streams**
+Our official Claude Code memory plugin has graduated to GA, enabling seamless client-side zero-knowledge memory sync within terminal-based coding workflows.
+
+- **Fast Handshake** — Initiates secure stdio handshake protocol in `<10ms`.
+- **Compaction Engine** — Session memory is automatically compacted and encrypted before transmission to prevent token bloat.
+- **Auto-Decay Recognition** — Context-aware memory decay ensures that old task variables are deprioritized dynamically.
+
+---
+
+[​](https://docs.mem0.ai/changelog/agent-plugins#2026-04-25)
+
+### 2026-04-25
+
+#### Cursor Desktop Extension
+
+**Cursor Desktop Extension — Unified MCP Tools**
+Introduced direct support for the standard stdio MCP server inside Cursor, replacing legacy Smithery and local setups.
+
+- **Unified Tool Mapping** — Integrated `memory_store` and `memory_recall` tools for seamless state persistence.
+- **Hardware-Accelerated Encryption** — Integrates with the host system's native cryptographical store for secure client-side key storage.

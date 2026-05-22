@@ -1,0 +1,228 @@
+# =============================================================================
+# Inheribase Monorepo .gitignore
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Dependencies
+# -----------------------------------------------------------------------------
+/node_modules
+**/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+.pnpm-store/
+.corepack/
+
+# -----------------------------------------------------------------------------
+# Build outputs
+# -----------------------------------------------------------------------------
+/build
+**/.next/
+**/out/
+**/dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# Root-level build artifacts (produced by vercel-build.sh staging)
+/_next/
+/**/*.html
+/**/*.txt
+/favicon.ico
+/sitemap.xml
+/robots.txt
+/logo-mark-standard.svg
+/logos/
+/build_output.log
+/about-us/
+/blog/
+/faq/
+/brand/
+/careers/
+/changelog/
+/contact/
+/contracts/
+/dead-mans-switch/
+/developers/
+/escape-hatch/
+/families/
+/how-it-works/
+/pricing/
+/privacy/
+/professionals/
+/security/
+/support/
+/terms/
+/trust/
+
+# -----------------------------------------------------------------------------
+# Environment & secrets
+# -----------------------------------------------------------------------------
+.env*
+!.env.example
+*.local
+*.pem
+
+# -----------------------------------------------------------------------------
+# Frameworks & platforms
+# -----------------------------------------------------------------------------
+.vercel
+.turbo
+
+# -----------------------------------------------------------------------------
+# OS & editor
+# -----------------------------------------------------------------------------
+.DS_Store
+.claude/
+
+# -----------------------------------------------------------------------------
+# Debug logs
+# -----------------------------------------------------------------------------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dry_run.log
+
+# -----------------------------------------------------------------------------
+# Testing
+# -----------------------------------------------------------------------------
+/coverage
+temp-test-data/
+apps/dashboard/test-results/
+apps/docs/test-results/
+integration-test-assets/
+test-assets/
+testsprite_tests/
+tmp_vitest/
+
+# -----------------------------------------------------------------------------
+# Smart contracts (build artifacts)
+# -----------------------------------------------------------------------------
+contract/broadcast/
+contract/cache/
+contract/out/
+
+# -----------------------------------------------------------------------------
+# Agent system (all agent config, logs, and runtime state)
+# -----------------------------------------------------------------------------
+.agent/
+logs/
+.daemon-state.json
+backup_*.json
+mcp_payload*.json
+
+# Agent-generated reports & audits (root level)
+/AUDIT_*.md
+/DASHBOARD_*.md
+/SECURITY_AUDIT_VERDICT.md
+/MARKETING_INTEGRATION_VERDICT.md
+/RISK_ASSESSMENT_ARTIFACT.md
+/VERIFICATION_OF_AUDIT.md
+/QUICK_REFERENCE.md
+/PRODUCTION_READINESS_REFACTOR_PLAN.md
+/SETTINGS_UX_PLAN.md
+/DOCUMENTATION_GAP_ANALYSIS_REPORT.md
+/sovseal_seo_aeo_geo_audit.md
+/dual-strategy-data-research.md
+/refined_leads.md
+/COMMAND_GUIDE.md
+
+# Agent architecture docs (legacy location)
+universal_ai_architect/
+knowledge/
+
+# -----------------------------------------------------------------------------
+# Design & generative artifacts
+# -----------------------------------------------------------------------------
+.stitch/
+*.png
+!apps/**/public/**/*.png
+!apps/**/src/**/*.png
+!public/**/*.png
+*.zip
+generation_log.json
+verification_output.json
+stitch_tools.json
+desktop_navbar_*.json
+evolution_v1_code.html
+html_url.txt
+
+# -----------------------------------------------------------------------------
+# Obsolete / archived directories (kept on disk, not in git)
+# -----------------------------------------------------------------------------
+marketing_backup_old/
+dashboardv3/
+SovSeal/
+shannon/
+kimi-new-market/
+screenshots/
+/public/
+ops/
+apps/pixel-agents/
+apps/archive/
+
+# -----------------------------------------------------------------------------
+# Internal documentation (strategy, roadmaps, pricing)
+# -----------------------------------------------------------------------------
+/docs/
+docs/internal/
+docs/archive/
+docs/marketing/intelligence/
+
+# -----------------------------------------------------------------------------
+# Infrastructure & ops
+# -----------------------------------------------------------------------------
+google-cloud-sdk/
+scripts/marketing/ops/.env.social
+/tools/
+/tmp/
+
+# -----------------------------------------------------------------------------
+# Misc one-off files that should never be committed
+# -----------------------------------------------------------------------------
+check_db.ts
+*.bak
+*.old
+*.check
+
+# Stray dev/debug artifacts
+agent_summaries.txt
+check_policies.sql
+curl_output.html
+dddddddddd.txt
+deploy_mcp.js
+error
+mcp_bundle*.js
+next-env.d.ts.tmp
+standing.MD
+strip_comments.js
+/next.config.js
+/postcss.config.mjs
+
+# -----------------------------------------------------------------------------
+# Backups
+# -----------------------------------------------------------------------------
+.backups/
+backups/
+*.bak
+*.old
+*.check
+/backup_v*.zip
+/archive_*.tgz
+
+# -----------------------------------------------------------------------------
+# Vendor / Reference Repositories
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# Sandbox / Local Caches
+# -----------------------------------------------------------------------------
+.cache/
+**/ .cache/
+
+/cipherwill/
+/cipherwill-app/
+/cipherwill
+/apps/cipherwill/
+/apps/pixel-agents/
+supabase/.temp/
+inheribase/_next/

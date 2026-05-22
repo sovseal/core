@@ -1,0 +1,16 @@
+---
+title: Components Overview
+description: The pluggable pieces of a sovseal deployment — embedders, vector stores, encryption.
+---
+
+import { Card, Cards } from "@/components/card";
+
+sovseal ships with sensible production defaults. Every component is also replaceable
+behind a stable interface — swap the embedding model, the vector store, or the
+encryption primitives without changing your application code.
+
+<Cards>
+  <Card title="Embedders" href="/components/embedders/overview" description="ONNX + Transformers.js, 384-d default" />
+  <Card title="Vector Stores" href="/components/vector-stores/overview" description="LanceDB local · Postgres + pgvector remote" />
+  <Card title="Encryption" href="/components/encryption/overview" description="AES-256-GCM, server-blind by construction" />
+</Cards>

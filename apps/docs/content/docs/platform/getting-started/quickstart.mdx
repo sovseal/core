@@ -1,0 +1,189 @@
+---
+title: Quickstart
+description: A working sovseal memory layer in 60 seconds. Three paths — pick the one that matches your runtime.
+---
+
+import { Callout } from "@/components/callout";
+import { Tab, Tabs } from "@/components/tabs";
+
+Three integration architectures, all backed by the same local-first core. Pick the one
+that matches your runtime — you can switch later without rewriting your data.
+
+|                   | MCP Plugin             | Node SDK                       | Self-Hosted Edge                |
+| ----------------- | ---------------------- | ------------------------------ | ------------------------------- |
+| **Best for**      | AI coding assistants   | Apps & autonomous agents       | Strict compliance / data residency |
+| **Setup**         | One JSON block         | `npm install @sovseal/sdk`     | Deploy one edge function        |
+| **Auth**          | Self-asserting         | API key (`sov_live_*`)         | Bring your own                  |
+| **Storage**       | On-device + managed    | On-device + managed            | On-device + your Postgres       |
+| **Recall latency**| 0 RTT (local)          | 0 RTT (local)                  | 0 RTT (local)                   |
+
+<Callout type="info">
+**Just experimenting?** Use the MCP plugin — no signup. **Building a product?** Use the
+SDK. **Strict compliance?** Self-host the edge function.
+</Callout>
+
+---
+
+## Path 1 — MCP plugin (Claude / Cursor / Windsurf / OpenClaw)
+
+Give your AI coding assistant persistent, local memory. Runs entirely on your machine.
+Zero signup, zero API keys. First run creates `~/.sovseal/config.json` with a project
+token and an AES-256 key — both stay on your device.
+
+<Tabs items={["Claude Desktop", "Cursor", "Windsurf"]}>
+
+```json tab="Claude Desktop"
+// ~/Library/Application Support/Claude/claude_desktop_config.json
+{
+  "mcpServers": {
+    "sovseal-memory": {
+      "command": "npx",
+      "args": ["-y", "@sovseal/mcp-server"]
+    }
+  }
+}
+```
+
+```json tab="Cursor"
+// ~/.cursor/mcp.json
+{
+  "mcpServers": {
+    "sovseal-memory": {
+      "command": "npx",
+      "args": ["-y", "@sovseal/mcp-server"]
+    }
+  }
+}
+```
+
+```json tab="Windsurf"
+// ~/.codeium/windsurf/mcp_config.json
+{
+  "mcpServers": {
+    "sovseal-memory": {
+      "command": "npx",
+      "args": ["-y", "@sovseal/mcp-server"]
+    }
+  }
+}
+```
+
+</Tabs>
+
+Restart the client. The `store_memory`, `recall_memory`, `list_memories`, and
+`delete_memory` tools will appear in the tool list.
+
+<Callout type="info" title="Cold start">
+First launch downloads the embedding model (~30 MB) to `~/.sovseal/models/` and warms
+up the ONNX pipeline. Subsequent recalls are sub-25ms p99.
+</Callout>
+
+### Verify it works
+
+In your AI client, ask it to store and recall something:
+
+> "Remember that I prefer Vitest over Jest for new TypeScript projects."
+
+Then in a new chat (or after restarting the client):
+
+> "What testing framework do I prefer?"
+
+The client should call `recall_memory` and answer correctly. Look at
+`~/.sovseal/db/` — you'll see the LanceDB index files. Look at the network — no
+recall request was made.
+
+---
+
+## Path 2 — Node SDK
+
+Embed sovseal directly in your application. Best for production apps, autonomous
+agents, and anything outside the MCP ecosystem.
+
+### Install
+
+```bash
+npm install @sovseal/sdk
+```
+
+### Configure
+
+```ts
+import { Sovseal } from "@sovseal/sdk";
+
+const memory = new Sovseal({
+  // Get one at https://sovseal.com/dashboard
+  apiKey: process.env.SOVSEAL_API_KEY,         // sov_live_…
+  // Optional — defaults to ~/.sovseal/db/
+  storagePath: "./.sovseal",
+  // Optional — set null to disable replication (local-only mode)
+  replicationUrl: "https://api.sovseal.com/v2/agent-state",
+});
+
+await memory.ready();   // awaits index + embedder warmup (one-time, ~1.2s)
+```
+
+### Store and recall
+
+```ts
+// Write. Returns when the local commit is durable.
+// Replication happens in the background, ciphertext-only.
+await memory.store("user.preferences.testing", {
+  framework: "vitest",
+  rationale: "ESM-native, faster cold start than Jest",
+});
+
+// Read. Local. 0 RTT. ~6ms p50.
+const hits = await memory.recall("what testing framework", { topK: 3 });
+
+console.log(hits[0].payload.framework);   // "vitest"
+console.log(hits[0].score);               // 0.91
+```
+
+### What just happened
+
+1. `store(...)` canonicalized the payload, encrypted it with AES-256-GCM under your
+   device key, wrote the ciphertext to LanceDB locally, and **returned immediately**.
+2. A background worker pushed the ciphertext + path-hash to the replication endpoint.
+   The endpoint never saw your plaintext, your key, or the path `"user.preferences.testing"`.
+3. `recall(...)` ran a vector query against the local LanceDB index. No HTTP call.
+
+---
+
+## Path 3 — Self-hosted edge function
+
+For teams that need to own the replication infrastructure (data residency, FedRAMP-
+aligned controls, sovereign deployment).
+
+```bash
+# In your sovseal repo checkout:
+supabase functions deploy v2-agent-state
+supabase db push    # applies the migrations
+```
+
+Then point your SDK at your endpoint:
+
+```ts
+const memory = new Sovseal({
+  replicationUrl: "https://<your-project>.supabase.co/functions/v1/v2-agent-state",
+  apiKey: process.env.SOVSEAL_API_KEY,
+});
+```
+
+The SDK contract is identical to Platform — only the base URL changes.
+
+<Callout type="info">
+Full self-hosted guide is at [Self-Hosted → Deploy](/self-hosted/deploy).
+</Callout>
+
+---
+
+## Next steps
+
+- [**Core Concepts → Memory Model**](/platform/core-concepts/memory-model) — understand what a
+  record actually is.
+- [**Core Concepts → Verified Semantic Recall**](/platform/core-concepts/verified-semantic-recall) —
+  the cryptographic guarantee on every read.
+- [**Integrations**](/integrations/overview) — wire sovseal into LangChain, Vercel AI
+  SDK, OpenAI Agents SDK, and more.
+- [**Cookbooks**](/cookbooks/overview) — complete recipes for trading agents,
+  healthcare co-pilots, and threat-detection systems.

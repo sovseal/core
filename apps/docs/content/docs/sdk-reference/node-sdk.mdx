@@ -1,0 +1,41 @@
+---
+title: "@sovseal/sdk (Node)"
+description: Complete reference for the Node.js SDK — types, methods, errors.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+Type-by-type reference incoming. Today's authoritative source is the package
+[README and TypeScript declarations](https://github.com/sovseal/sovseal/tree/main/packages/sdk).
+</Callout>
+
+## Install
+
+```bash
+npm install @sovseal/sdk
+```
+
+## Surface preview
+
+```ts
+import { Sovseal } from "@sovseal/sdk";
+
+const memory = new Sovseal({
+  // optional — defaults to ~/.sovseal/config.json
+  projectToken: process.env.SOVSEAL_PROJECT_TOKEN,
+  // optional — set null to disable replication entirely (local-only mode)
+  replicationUrl: "https://api.sovseal.com/v2/agent-state",
+});
+
+await memory.store("user.preferences", { theme: "dark" });
+const hits = await memory.recall("user theme preference", { topK: 5 });
+```
+
+## What this page will cover
+
+- TODO: full method catalog (`store`, `recall`, `delete`, `snapshot`, `fork`, `rollback`)
+- TODO: configuration object reference
+- TODO: error taxonomy (`AuthError`, `VsrFailureError`, `ReplicationLagError`)
+- TODO: TypeScript type definitions
+- TODO: testing utilities (`InMemoryReplicator`, `DeterministicClock`)

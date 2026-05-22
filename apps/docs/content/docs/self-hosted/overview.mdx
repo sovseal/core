@@ -1,0 +1,38 @@
+---
+title: Self-Hosted Overview
+description: Run the sovseal replication stack on your own infrastructure.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+Self-hosted deployment guides are being expanded. The replication endpoint ships as
+a single Supabase Edge Function plus one Postgres schema; today's quickstart is in
+the [repository README](https://github.com/sovseal/sovseal).
+</Callout>
+
+## What you operate
+
+```
+┌───────────────────────────────────────────────────────────────┐
+│  Your infrastructure (sovseal sees none of it)                │
+│  ┌──────────────────┐    ┌─────────────────────────────────┐  │
+│  │  Edge function   │    │  Postgres (+ pgvector optional) │  │
+│  │  v2-agent-state  │───►│  • replications table           │  │
+│  │  (Hono / Deno)   │    │  • projects table               │  │
+│  └──────────────────┘    └─────────────────────────────────┘  │
+│           ▲                                                   │
+│           │ HTTPS, ciphertext only                            │
+└───────────┼───────────────────────────────────────────────────┘
+            │
+   ┌────────┴────────┐
+   │  Your agents    │  (local SDK / MCP server)
+   └─────────────────┘
+```
+
+## What this page will cover
+
+- TODO: deployment topologies (single-region, multi-region, edge-only)
+- TODO: hardware sizing per workload tier
+- TODO: backup and disaster-recovery posture
+- TODO: upgrade path between SDK / edge function versions

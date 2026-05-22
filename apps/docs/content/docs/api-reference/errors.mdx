@@ -1,0 +1,29 @@
+---
+title: Errors
+description: Error envelope and the full set of error codes returned by the replication API.
+---
+
+import { Callout } from "@/components/callout";
+
+<Callout type="warning" title="Draft">
+Full error taxonomy incoming.
+</Callout>
+
+## Error envelope
+
+```json
+{
+  "success": false,
+  "error": {
+    "code": "AUTH_INVALID",
+    "message": "API key is malformed, expired, or revoked."
+  },
+  "timestamp": 1716249600000
+}
+```
+
+## What this page will cover
+
+- TODO: complete error code table with HTTP status mapping
+- TODO: retry guidance per code class
+- TODO: idempotency keys and behavior on retry

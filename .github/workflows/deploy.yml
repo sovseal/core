@@ -1,0 +1,128 @@
+name: Vercel Production Deployment
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  NODE_VERSION: 20
+
+jobs:
+  Audit:
+    name: Lint & Typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+  Test:
+    name: Unit & Integration Tests
+    runs-on: ubuntu-latest
+    needs: Audit
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run Tests
+        run: pnpm test
+
+  Build-Validation:
+    name: Build Validation
+    runs-on: ubuntu-latest
+    needs: Audit
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build All Apps
+        run: pnpm build
+        env:
+          # Turbo handles the orchestration; we need to mock or provide necessary ENVs if they affect build time
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+
+  Deploy:
+    name: Deploy to Vercel
+    runs-on: ubuntu-latest
+    needs: [Test, Build-Validation]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - app: dashboard
+            project_id: prj_IfQMNc9qZGeHk8I9aJy8xa4ryvAz
+          - app: marketing
+            project_id: prj_KuyOYWn7868AW4xyi0kTQjJiYHUZ
+          - app: docs
+            project_id: prj_oldJiGSAn8xvlTO74HH1qW4HIIIr
+          - app: status
+            project_id: prj_YTlxtlbUS1S13d5LFcTH2Z5bQEfr
+          - app: playground
+            project_id: prj_Pn30xeVGQKziQGmeVzLWaH2DSRey
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Deploy to Vercel
+        run: vercel deploy --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
+        env:
+          VERCEL_PROJECT_ID: ${{ matrix.project_id }}
