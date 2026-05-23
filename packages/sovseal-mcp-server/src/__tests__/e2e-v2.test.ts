@@ -18,8 +18,8 @@ import { readFile } from "node:fs/promises";
 import { beforeAll, afterAll, afterEach, describe, expect, test } from "vitest";
 
 import { CryptoService, decryptJson } from "@inheribase/core-protocol";
-import { storeLocal, queryLocal, resetLocalDbForTests } from "../local/index.js";
-import { initLocalDb, MEMORIES_TABLE } from "../local/db.js";
+import { resetLocalDbForTests } from "../local/index.js";
+import { initLocalDb } from "../local/db.js";
 import { storeMemoryTool } from "../tools/store-memory.js";
 import { recallMemoryTool } from "../tools/recall-memory.js";
 import { SyncWorker } from "../sync/worker.js";
@@ -111,7 +111,7 @@ describe("E2E-V2 — Semantic Memory Vector Brain & Cold-Start Replay", () => {
     for (const tc of corpus.queries) {
       const res = await recallMemoryTool.handler({ query: tc.query, topK: 5 });
       expect(res.isError).toBeFalsy();
-      const textHits = res.content.map(c => c.text);
+      const textHits = res.content.map(c => (c as any).text);
       const isMatched = textHits.some(text => text.includes(tc.expected_match));
       if (isMatched) {
         matches++;
@@ -181,7 +181,7 @@ describe("E2E-V2 — Semantic Memory Vector Brain & Cold-Start Replay", () => {
     const worker = new SyncWorker({
       encryptionKey,
       apiKey: "sov_proj_mock_key",
-      clientFactory: (o) => new ReplicateClient({ ...o, fetchImpl: mockFetch }),
+      clientFactory: (o) => new ReplicateClient({ ...o, fetchImpl: mockFetch as any }),
       statePath,
       apiEndpoint: "http://mock-server.local"
     });
@@ -217,7 +217,7 @@ describe("E2E-V2 — Semantic Memory Vector Brain & Cold-Start Replay", () => {
     const client = new ReplicateClient({
       endpoint: "http://mock-server.local",
       apiKey: "sov_proj_mock_key",
-      fetchImpl: mockFetch
+      fetchImpl: mockFetch as any
     });
 
     const replay = await client.getReplay(-1);
@@ -279,7 +279,7 @@ describe("E2E-V2 — Semantic Memory Vector Brain & Cold-Start Replay", () => {
     for (const tc of corpus.queries) {
       const res = await recallMemoryTool.handler({ query: tc.query, topK: 5 });
       expect(res.isError).toBeFalsy();
-      const textHits = res.content.map(c => c.text);
+      const textHits = res.content.map(c => (c as any).text);
       const isMatched = textHits.some(text => text.includes(tc.expected_match));
       if (isMatched) {
         postMatches++;

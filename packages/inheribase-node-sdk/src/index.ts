@@ -1,7 +1,7 @@
 /**
  * @sovseal/sdk
  *
- * HTTP client for the SovSeal agent state protocol.
+ * HTTP client for the sovseal agent state protocol.
  * Re-exports core-protocol primitives for consumer convenience.
  */
 

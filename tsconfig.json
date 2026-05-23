@@ -14,5 +14,5 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "exclude": ["node_modules", "apps", "packages"]
+  "exclude": ["node_modules", "apps", "packages", "inheribase"]
 }

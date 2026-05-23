@@ -19,9 +19,9 @@ npm install @sovseal/sdk
 ## Surface preview
 
 ```ts
-import { Sovseal } from "@sovseal/sdk";
+import { sovseal } from "@sovseal/sdk";
 
-const memory = new Sovseal({
+const memory = new sovseal({
   // optional — defaults to ~/.sovseal/config.json
   projectToken: process.env.SOVSEAL_PROJECT_TOKEN,
   // optional — set null to disable replication entirely (local-only mode)

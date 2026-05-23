@@ -1,14 +1,14 @@
-# SovSeal — AI Agent Guide
+# sovseal — AI Agent Guide
 
 > **Last Updated:** 2026-05-12
-> **Brand:** SovSeal — agentic state continuity (formerly the Inheribase B2C inheritance protocol)
+> **Brand:** sovseal — agentic state continuity (formerly the Inheribase B2C inheritance protocol)
 > **Public product:** `@sovseal/mcp-server` on npm, edge fn live at `https://ksrlmubaxzwufziwarps.supabase.co/functions/v1/v2-agent-state`
 > **Product context:** `.agent/context/product-truth.md` (positioning, terminology, doc paths)
 > **Agent directives:** `.agent/memory/global.md` (behavioral rules, observability)
 
 ---
 
-## Active Product (2026-05-12) — SovSeal MCP Platform
+## Active Product (2026-05-12) — sovseal MCP Platform
 
 The shipping product is `@sovseal/mcp-server`: a local stdio MCP server that gives AI agents (Claude Desktop, Cursor, etc.) encrypted, decentralized memory. Three packages back it:
 
@@ -20,7 +20,7 @@ The shipping product is `@sovseal/mcp-server`: a local stdio MCP server that giv
 
 Cloud endpoint: `https://ksrlmubaxzwufziwarps.supabase.co/functions/v1/v2-agent-state` (Supabase project `sovseal`, ref `ksrlmubaxzwufziwarps`). Persistence: `agent_state_snapshots` table + `sovseal-rom` public Storage bucket. Auth: dual-mode — `sov_live_<api_key>` (DB-backed, paid) and `sov_proj_<uuid v4>` (self-asserting, free).
 
-Everything below this section describes the broader monorepo, which still contains the legacy Inheribase B2C inheritance product (vaults / heirs / guardians / dashboard / marketing). That surface remains for historical reasons; new product work targets the SovSeal MCP platform unless explicitly directed otherwise.
+Everything below this section describes the broader monorepo, which still contains the legacy Inheribase B2C inheritance product (vaults / heirs / guardians / dashboard / marketing). That surface remains for historical reasons; new product work targets the sovseal MCP platform unless explicitly directed otherwise.
 
 ---
 
@@ -28,7 +28,7 @@ Everything below this section describes the broader monorepo, which still contai
 
 ```
 sovseal/
-├── packages/                                # Active MCP platform (the SovSeal launch)
+├── packages/                                # Active MCP platform (the sovseal launch)
 │   ├── sovseal-mcp-server/   # @sovseal/mcp-server  — npm-published stdio MCP server
 │   ├── inheribase-node-sdk/  # @sovseal/sdk         — HTTP client for the edge fn
 │   ├── core-protocol/        # @inheribase/core-protocol — crypto + pricing primitives

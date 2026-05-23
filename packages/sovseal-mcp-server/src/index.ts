@@ -1,5 +1,5 @@
 /**
- * SovSeal MCP Server
+ * sovseal MCP Server
  *
  * Local stdio MCP server exposing the Semantic Vector Brain to LLM agents.
  *
@@ -75,7 +75,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     };
   }
 
-  return tool.handler(parsed.data);
+  return tool.handler(parsed.data as any);
 });
 
 async function main() {

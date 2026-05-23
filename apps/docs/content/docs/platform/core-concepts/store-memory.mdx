@@ -74,9 +74,9 @@ ever blocks on I/O.**
 <Tabs items={["Node SDK", "MCP tool", "cURL (self-hosted REST)"]}>
 
 ```ts tab="Node SDK"
-import { Sovseal } from "@sovseal/sdk";
+import { sovseal } from "@sovseal/sdk";
 
-const memory = new Sovseal({ apiKey: process.env.SOVSEAL_API_KEY });
+const memory = new sovseal({ apiKey: process.env.SOVSEAL_API_KEY });
 await memory.ready();
 
 const result = await memory.store("user.preferences.testing", {

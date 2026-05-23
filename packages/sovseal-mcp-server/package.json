@@ -3,7 +3,7 @@
   "version": "0.3.0",
   "description": "Local-first semantic memory MCP server for autonomous agents. On-device LanceDB + Transformers.js, write-behind replication.",
   "license": "Apache-2.0",
-  "author": "SovSeal",
+  "author": "sovseal",
   "repository": {
     "type": "git",
     "url": "https://github.com/sovseal/sovseal",

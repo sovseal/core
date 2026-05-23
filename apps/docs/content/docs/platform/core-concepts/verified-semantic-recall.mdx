@@ -84,9 +84,9 @@ You don't call VSR directly — it runs on every restore. But you do need to han
 its failure mode.
 
 ```ts
-import { Sovseal, VsrFailureError } from "@sovseal/sdk";
+import { sovseal, VsrFailureError } from "@sovseal/sdk";
 
-const memory = new Sovseal({ apiKey: process.env.SOVSEAL_API_KEY });
+const memory = new sovseal({ apiKey: process.env.SOVSEAL_API_KEY });
 await memory.ready();
 
 try {

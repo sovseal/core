@@ -6,7 +6,7 @@
 //
 // Self-asserting tokens carry no DB lookup: the project_id IS the credential.
 // Knowing the token grants read+write to that project's snapshot lineage.
-// CEO-accepted risk per SOVSEAL-MCP-WIRING (2026-05-10).
+// CEO-accepted risk per sovseal-mcp-wiring (2026-05-10).
 
 export interface AuthContext {
   apiKeyId: string;

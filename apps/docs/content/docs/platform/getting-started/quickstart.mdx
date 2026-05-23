@@ -108,9 +108,9 @@ npm install @sovseal/sdk
 ### Configure
 
 ```ts
-import { Sovseal } from "@sovseal/sdk";
+import { sovseal } from "@sovseal/sdk";
 
-const memory = new Sovseal({
+const memory = new sovseal({
   // Get one at https://sovseal.com/dashboard
   apiKey: process.env.SOVSEAL_API_KEY,         // sov_live_…
   // Optional — defaults to ~/.sovseal/db/
@@ -163,7 +163,7 @@ supabase db push    # applies the migrations
 Then point your SDK at your endpoint:
 
 ```ts
-const memory = new Sovseal({
+const memory = new sovseal({
   replicationUrl: "https://<your-project>.supabase.co/functions/v1/v2-agent-state",
   apiKey: process.env.SOVSEAL_API_KEY,
 });

@@ -1,9 +1,9 @@
 <p align="center">
   <a href="https://sovseal.com">
-    <img src="https://sovseal.com/logo-mark-standard.svg" width="80px" alt="SovSeal - The Sovereign Memory Layer for AI Agents">
+    <img src="https://sovseal.com/logo-mark-standard.svg" width="80px" alt="sovseal - The Sovereign Memory Layer for AI Agents">
   </a>
 </p>
-<h1 align="center">SovSeal</h1>
+<h1 align="center">sovseal</h1>
 <p align="center">
   <strong>The sovereign memory layer for AI agents.</strong><br/>
   Local-first speed. Zero-knowledge privacy. Free, forever.
@@ -34,7 +34,7 @@
 
 ## Measured Performance & Benchmarks (May 2026)
 
-Cloud-hosted memory layers force a tradeoff between latency, privacy, and cost. Every recall is a 200–800 ms round-trip to someone else's database. **SovSeal collapses the tradeoff.** LanceDB and Transformers.js run *inside* your agent's process.
+Cloud-hosted memory layers force a tradeoff between latency, privacy, and cost. Every recall is a 200–800 ms round-trip to someone else's database. **sovseal collapses the tradeoff.** LanceDB and Transformers.js run *inside* your agent's process.
 
 | Workload | Operation | p50 | p95 | p99 | Network |
 | --- | --- | --- | --- | --- | --- |
@@ -52,7 +52,7 @@ All benchmarks reproduce with: `pnpm --filter @sovseal/mcp-server test bench-v2`
 
 # Introduction
 
-[SovSeal](https://sovseal.com) enhances AI assistants and agents with an encrypted, local-first memory layer, enabling private and personalized AI interactions. It drops into any MCP-compatible client and gives your agent persistent semantic memory that survives crashes, restarts, and reinstalls, completely free of usage limits and vendor lock-in.
+[sovseal](https://sovseal.com) enhances AI assistants and agents with an encrypted, local-first memory layer, enabling private and personalized AI interactions. It drops into any MCP-compatible client and gives your agent persistent semantic memory that survives crashes, restarts, and reinstalls, completely free of usage limits and vendor lock-in.
 
 ### Key Features & Use Cases
 
@@ -71,7 +71,7 @@ All benchmarks reproduce with: `pnpm --filter @sovseal/mcp-server test bench-v2`
 
 ### Choose your path
 
-SovSeal exposes one protocol with three delivery shapes. Pick by where your code runs:
+sovseal exposes one protocol with three delivery shapes. Pick by where your code runs:
 
 | | **MCP Server** | **Node SDK** | **Self-Hosted Edge** |
 |---|---|---|---|
@@ -105,7 +105,7 @@ One-line install for Claude Code:
 claude mcp add sovseal -- npx -y @sovseal/mcp-server
 ```
 
-For always-on autonomous agents, switch to HTTP/SSE transport so the SovSeal process outlives a single tool invocation:
+For always-on autonomous agents, switch to HTTP/SSE transport so the sovseal process outlives a single tool invocation:
 
 ```bash
 SOVSEAL_TRANSPORT=sse SOVSEAL_PORT=4040 npx -y @sovseal/mcp-server
@@ -227,7 +227,7 @@ async function chatWithMemory(agentId: string, message: string) {
 
 ## 🔗 Integrations & Agent Frameworks
 
-All of these consume the same MCP server through their first-class MCP support. No SovSeal-specific adapter is required:
+All of these consume the same MCP server through their first-class MCP support. No sovseal-specific adapter is required:
 
 | Framework | How it consumes MCP |
 |---|---|
@@ -294,5 +294,5 @@ Track progress in [CHANGELOG.md](./CHANGELOG.md) and the issue tracker.
 [Apache 2.0](./LICENSE) — for the entire public surface (MCP server, SDK, core protocol, edge function, docs). Fork it, ship it, run it however you like.
 
 <div align="center">
-  <sub>Built by the SovSeal team — local-first, zero-knowledge, free.</sub>
+  <sub>Built by the sovseal team — local-first, zero-knowledge, free.</sub>
 </div>

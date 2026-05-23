@@ -33,6 +33,6 @@ export type RecallMemoryArgs = z.infer<typeof RecallMemoryArgsSchema>;
 export interface ToolDefinition<TArgs> {
   name: string;
   description: string;
-  schema: z.ZodType<TArgs>;
+  schema: z.ZodType<TArgs, any, any>;
   handler: (args: TArgs) => Promise<CallToolResult>;
 }

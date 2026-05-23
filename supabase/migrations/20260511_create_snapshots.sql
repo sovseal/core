@@ -1,5 +1,5 @@
--- SOVSEAL: Real-metal persistence for the v2 agent state protocol.
--- Mission SOVSEAL-MCP-REAL — backs save_context / load_context MCP tools.
+-- sovseal: Real-metal persistence for the v2 agent state protocol.
+-- Mission sovseal-mcp-real — backs save_context / load_context MCP tools.
 
 CREATE TABLE IF NOT EXISTS public.agent_state_snapshots (
     id                  UUID        PRIMARY KEY DEFAULT gen_random_uuid(),

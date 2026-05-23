@@ -1,5 +1,5 @@
 /**
- * CryptoService — AES-256-GCM encryption for the SovSeal protocol.
+ * CryptoService — AES-256-GCM encryption for the sovseal protocol.
  *
  * Uses Web Crypto API for cross-runtime compatibility (Node 20+, Deno, Bun, Workers).
  * All encryption is performed client-side for true zero-knowledge security.
@@ -52,7 +52,7 @@ export class CryptoService {
     const ciphertext = await crypto.subtle.encrypt(
       { name: this.ALGORITHM, iv, tagLength: this.TAG_LENGTH * 8 },
       key,
-      buf,
+      buf as ArrayBuffer,
     );
     return { ciphertext, iv, algorithm: "AES-GCM", keyLength: 256 };
   }
@@ -64,11 +64,11 @@ export class CryptoService {
     return await crypto.subtle.decrypt(
       {
         name: this.ALGORITHM,
-        iv: encrypted.iv,
+        iv: encrypted.iv as BufferSource,
         tagLength: this.TAG_LENGTH * 8,
       },
       key,
-      encrypted.ciphertext,
+      encrypted.ciphertext as BufferSource,
     );
   }
 
@@ -99,7 +99,7 @@ export class CryptoService {
   static unpack(blob: Uint8Array): EncryptedData {
     return {
       iv: blob.slice(0, this.IV_LENGTH),
-      ciphertext: blob.slice(this.IV_LENGTH).buffer,
+      ciphertext: blob.slice(this.IV_LENGTH).buffer as ArrayBuffer,
       algorithm: "AES-GCM",
       keyLength: 256,
     };
@@ -110,7 +110,7 @@ export class CryptoService {
       data instanceof Uint8Array
         ? data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength)
         : data;
-    const hashBuffer = await crypto.subtle.digest("SHA-256", buf);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", buf as ArrayBuffer);
     return Array.from(new Uint8Array(hashBuffer))
       .map((b) => b.toString(16).padStart(2, "0"))
       .join("");

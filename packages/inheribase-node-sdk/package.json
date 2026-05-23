@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "license": "Apache-2.0",
-  "description": "HTTP client for the SovSeal agent state protocol",
+  "description": "HTTP client for the sovseal agent state protocol",
   "type": "module",
   "main": "./src/index.ts",
   "types": "./src/index.ts",

@@ -1,6 +1,6 @@
 {
   "title": "Changelog",
-  "description": "Latest updates and release notes for the SovSeal platform, SPK, and VTC protocols.",
+  "description": "Latest updates and release notes for the sovseal platform, SPK, and VTC protocols.",
   "root": true,
   "pages": [
     "highlights",
