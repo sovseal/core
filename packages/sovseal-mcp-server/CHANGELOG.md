@@ -1,5 +1,19 @@
 # Changelog — @sovseal/mcp-server
 
+## 0.3.2 — 2026-05-25
+
+### Changed
+
+- **Rewrote `store_memory` and `recall_memory` tool descriptions** to drive proactive memory use without requiring users to explicitly say "store this," and to lean into the privacy-first differentiator. Previous descriptions used opinionated language ("CRITICAL", "MUST") but listed only developer-centric categories (API keys, architectural decisions, project knowledge), which biased the assistant toward firing only on coding contexts. The new descriptions:
+  - **Lead with the zero-knowledge differentiator.** Sovseal is the only memory tool where storing sensitive context (credentials, health data, legal matters, financial details, NDA-covered work, mental health context, internal company processes) is safe, because AES-256-GCM encryption happens on-device before anything leaves the process. The tool description tells the assistant to treat this as license to store sensitive content without hesitation.
+  - **Broadened categories** to cover the full set every leading memory tool targets: preferences, personal details, plans, professional context, health and routines, relationships, plus the existing dev-context items — and an explicit sensitive-context subcategory that other tools cannot safely hold.
+  - **Specified concrete trigger phrases.** Inspired by The Mom Test ("watch what people actually do/say, not what they tell you they value"), the description enumerates the user phrasings that should trigger storage — `"I am / I'm a / I work at"`, `"I prefer / I always / I never"`, `"between us / confidentially / don't repeat"`, etc. This gives the assistant unambiguous behavioral cues rather than vague intent.
+  - **Per-turn cadence.** `store_memory`: "call FIRST, then respond." `recall_memory`: "call BEFORE composing ANY response, including the first message of a new conversation."
+  - **Greedy invocation, justified by architecture.** "Over-storing is harmless (server de-duplicates); under-storing loses context permanently." "Over-recall is invisible; under-recall is the failure mode users feel." Matches mem0's and Supermemory's aggressive published prompts but grounded in sovseal's actual cost model (0 RTT recall, write-behind store).
+  - **Output style guidance.** Stored content is third-person self-contained statements ("User is allergic to peanuts" not "I'm allergic"). Recalled matches are woven into responses without announcing the lookup ("based on your memory…" is banned).
+
+No behavior change in the underlying storage, replication, or embedding stack. Tool descriptions are the only diff between 0.3.1 and 0.3.2.
+
 ## 0.3.1 — 2026-05-25
 
 ### Fixed

@@ -3,8 +3,8 @@
 </p>
 
 <p align="center">
-  <strong>The sovereign memory layer for AI agents.</strong><br/>
-  Local-first speed. Zero-knowledge privacy. Free, forever.
+  <strong>Private memory layer for AI agents.</strong><br/>
+  Stop losing context across sessions. Portable, local-first, and zero data leaks.
 </p>
 
 <p align="center">
@@ -52,7 +52,7 @@ All benchmarks reproduce with: `pnpm --filter @sovseal/mcp-server test bench-v2`
 
 # Introduction
 
-[sovseal](https://sovseal.com) enhances AI assistants and agents with an encrypted, local-first memory layer, enabling private and personalized AI interactions. It drops into any MCP-compatible client and gives your agent persistent semantic memory that survives crashes, restarts, and reinstalls, completely free of usage limits and vendor lock-in.
+[sovseal](https://sovseal.com) gives autonomous agents and AI assistants persistent, portable context that you actually own. It drops into any MCP-compatible client and stops your agents from forgetting workflows across sessions. Built for true portability and privacy, it guarantees zero data leaks by running entirely local-first with zero-knowledge cloud sync.
 
 ### Key Features & Use Cases
 

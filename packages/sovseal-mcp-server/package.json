@@ -1,6 +1,6 @@
 {
   "name": "@sovseal/mcp-server",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Local-first semantic memory MCP server for autonomous agents. On-device LanceDB + Transformers.js, write-behind replication.",
   "license": "Apache-2.0",
   "author": "sovseal",
