@@ -287,6 +287,7 @@ Track progress in [CHANGELOG.md](./CHANGELOG.md) and the issue tracker.
 - Quickstart: see the [Quickstart Guide](#quickstart) above
 - Integrations: see [Integrations & Agent Frameworks](#-integrations--agent-frameworks)
 - Source: [`packages/sovseal-mcp-server/`](packages/sovseal-mcp-server/) · [`supabase/functions/v2-agent-state/`](supabase/functions/v2-agent-state/)
+- Release notes: [`packages/sovseal-mcp-server/CHANGELOG.md`](packages/sovseal-mcp-server/CHANGELOG.md)
 - Issues & PRs: this repository
 - Contact: founders@sovseal.com
 
