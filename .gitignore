@@ -36,7 +36,6 @@ next-env.d.ts
 /about-us/
 /blog/
 /faq/
-/brand/
 /careers/
 /changelog/
 /contact/
@@ -138,6 +137,7 @@ knowledge/
 !apps/**/public/**/*.png
 !apps/**/src/**/*.png
 !public/**/*.png
+!brand/**/*.png
 *.zip
 generation_log.json
 verification_output.json
@@ -147,11 +147,16 @@ evolution_v1_code.html
 html_url.txt
 
 # -----------------------------------------------------------------------------
+# Internal-only docs (kept on disk, not in public repo)
+# -----------------------------------------------------------------------------
+/AGENTS.md
+
+# -----------------------------------------------------------------------------
 # Obsolete / archived directories (kept on disk, not in git)
 # -----------------------------------------------------------------------------
 marketing_backup_old/
 dashboardv3/
-SovSeal/
+/SovSeal/
 shannon/
 kimi-new-market/
 screenshots/
