@@ -8,6 +8,8 @@
 </p>
 
 <p align="center">
+  <a href="https://www.npmjs.com/package/@sovseal/mcp-server"><code>@sovseal/mcp-server</code></a>
+  ·
   <a href="https://www.npmjs.com/org/sovseal">@sovseal on npm</a>
   ·
   <a href="#quickstart">Quickstart</a>
