@@ -1,20 +1,20 @@
 <p align="center">
-  <a href="https://sovseal.com">
-    <img src="https://sovseal.com/logo-mark-standard.svg" width="80px" alt="sovseal - The Sovereign Memory Layer for AI Agents">
-  </a>
+  <img src="./brand/sovseal/social/github-banner.png" alt="sovseal — Zero-Knowledge Memory for AI Agents">
 </p>
-<h1 align="center">sovseal</h1>
+
 <p align="center">
   <strong>The sovereign memory layer for AI agents.</strong><br/>
   Local-first speed. Zero-knowledge privacy. Free, forever.
 </p>
 
 <p align="center">
-  <a href="https://sovseal.com">Learn more</a>
-  ·
-  <a href="https://sovseal.com/developers">Docs</a>
+  <a href="https://www.npmjs.com/package/@sovseal/mcp-server"><code>@sovseal/mcp-server</code></a>
   ·
   <a href="https://www.npmjs.com/org/sovseal">@sovseal on npm</a>
+  ·
+  <a href="#quickstart">Quickstart</a>
+  ·
+  <a href="./CHANGELOG.md">Changelog</a>
 </p>
 
 <p align="center">
@@ -269,7 +269,7 @@ pnpm --filter @sovseal/mcp-server test
 pnpm --filter @sovseal/mcp-server test bench-v2
 ```
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) and [AGENTS.md](./AGENTS.md).
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## 🗺️ Roadmap
 
@@ -284,8 +284,9 @@ Track progress in [CHANGELOG.md](./CHANGELOG.md) and the issue tracker.
 
 ## 📚 Documentation & Support
 
-- Full docs: <https://sovseal.com/developers>
-- API reference: [packages/sovseal-mcp-server/README.md](packages/sovseal-mcp-server/README.md)
+- Quickstart: see the [Quickstart Guide](#quickstart) above
+- Integrations: see [Integrations & Agent Frameworks](#-integrations--agent-frameworks)
+- Source: [`packages/sovseal-mcp-server/`](packages/sovseal-mcp-server/) · [`supabase/functions/v2-agent-state/`](supabase/functions/v2-agent-state/)
 - Issues & PRs: this repository
 - Contact: founders@sovseal.com
 

@@ -6,10 +6,13 @@
   "author": "sovseal",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sovseal/sovseal",
+    "url": "https://github.com/sovseal/core",
     "directory": "packages/sovseal-mcp-server"
   },
-  "homepage": "https://sovseal.com",
+  "homepage": "https://github.com/sovseal/core/tree/main/packages/sovseal-mcp-server",
+  "bugs": {
+    "url": "https://github.com/sovseal/core/issues"
+  },
   "keywords": [
     "sovseal",
     "mcp",
@@ -31,7 +34,6 @@
   "files": [
     "dist",
     "README.md",
-    "CHANGELOG.md",
     "LICENSE"
   ],
   "scripts": {
@@ -45,14 +47,14 @@
   "dependencies": {
     "@huggingface/transformers": "4.2.0",
     "@modelcontextprotocol/sdk": "^1.0.0",
-    "@sovseal/sdk": "workspace:*",
-    "@inheribase/core-protocol": "workspace:*",
     "apache-arrow": "14.0.2",
     "vectordb": "0.21.2",
     "zod": "^3.22.4",
     "zod-to-json-schema": "^3.22.0"
   },
   "devDependencies": {
+    "@inheribase/core-protocol": "workspace:*",
+    "@sovseal/sdk": "workspace:*",
     "@types/node": "^20.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",
