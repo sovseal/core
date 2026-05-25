@@ -42,6 +42,14 @@ For always-on autonomous agents, run as a long-lived HTTP/SSE server:
 SOVSEAL_TRANSPORT=sse SOVSEAL_PORT=4040 npx -y @sovseal/mcp-server
 ```
 
+After installation the package exposes two equivalent binaries — `mcp-server` (default) and `sovseal-mcp-server`. Either invocation form works for explicit control:
+
+```bash
+npx -y --package=@sovseal/mcp-server mcp-server
+# or
+npx -y --package=@sovseal/mcp-server sovseal-mcp-server
+```
+
 ## How it stays private
 
 - **AES-256-GCM** client-side encryption with a 96-bit random IV per snapshot
