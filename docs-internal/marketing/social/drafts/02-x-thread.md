@@ -7,9 +7,9 @@
 ---
 
 **Tweet 1/5 [The Commanding Hook]**
-I BUILT A PORTABLE, LOCAL-FIRST MEMORY LAYER FOR AI AGENTS.
+I BUILT A PORTABLE CONTEXT ENGINE FOR AI AGENTS.
 
-If you want your Cursor or Claude agent to remember your codebase, you usually have to send your proprietary data to a third-party cloud API. 
+If you want your Cursor or Claude agent to retain your codebase context, you usually have to send your proprietary data to a third-party cloud API. 
 
 That’s a massive privacy risk. So I open-sourced sovseal instead:
 
@@ -17,11 +17,11 @@ That’s a massive privacy risk. So I open-sourced sovseal instead:
 [Image/Video: 5-second GIF showing instant memory recall in Claude Desktop]
 
 **Tweet 2/5 [The Story / The Problem]**
-The standard approach to AI memory creates a data residency bottleneck. 
+The standard approach to AI context creates a data residency bottleneck. 
 
 If you use a hosted vector database, your proprietary context is trapped in a walled garden, and you eat a 500ms latency tax on every single query.
 
-Agent memory shouldn't work like this. You should own it.
+Agent context shouldn't work like this. You should own it.
 
 **Tweet 3/5 [The Local Architecture]**
 sovseal is built on a totally different philosophy. 
@@ -31,7 +31,7 @@ Instead of a cloud API, it’s an embedded engine running on Anthropic's Model C
 We brought LanceDB and Transformers.js (ONNX) entirely on-device. Semantic searches happen locally in <5ms.
 
 **Tweet 4/5 [Destroying the Privacy Tradeoff]**
-But local memory is useless if it's trapped on one machine. You need cloud sync for team state continuity.
+But local context is useless if it's trapped on one machine. You need cloud sync for team state continuity.
 
 Before any local DB diff leaves your machine, a background worker encrypts it using AES-256-GCM. The cloud only ever stores mathematically unreadable ciphertext.
 
