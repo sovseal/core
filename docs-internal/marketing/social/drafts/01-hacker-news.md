@@ -6,12 +6,12 @@
 ## 1. Title Options
 *HN violently rejects marketing jargon, capitalization, and buzzwords. The title must be matter-of-fact, technically precise, and highlight our exact differentiator from our previous conversation: Portable, local-first memory.*
 
-* **Option A:** `Show HN: A portable, local-first memory infrastructure for AI agents` *(Recommended)*
-* **Option B:** `Show HN: I built an end-to-end encrypted local memory node for Claude Desktop`
-* **Option C:** `Show HN: Give your AI agents persistent memory that you actually own`
+* **Option A:** `Show HN: A local-first context engine for Claude Desktop and Cursor` *(Recommended)*
+* **Option B:** `Show HN: I built a client-side encrypted memory layer for AI assistants`
+* **Option C:** `Show HN: Give coding assistants persistent memory without leaving localhost`
 
 ## 2. Authoritative First Comment
-*Post this immediately after submitting the link. We have stripped out AI-sounding phrases. This now reads exactly like an engineer sharing a highly technical tool they built to solve their own problem, following the Mom Test protocol (no attacking competitors).*
+*Post this immediately after submitting the link. This now reads exactly like an engineer sharing a highly technical tool they built to solve their own problem, using engineering honesty and precision.*
 
 ---
 
@@ -19,19 +19,17 @@ Hey HN,
 
 I'm the creator of sovseal.
 
-The current AI agent memory ecosystem heavily emphasizes centralized cloud APIs. While those tools offer incredible knowledge graphs, they introduce a massive data residency challenge: your agent's memory state gets trapped in a specific cloud provider or walled garden. 
+I've been using Claude Desktop and Cursor heavily, but I got frustrated by the "context amnesia" every time I started a new session. The standard workaround is piping text embeddings to a hosted vector database, but sending proprietary codebase context to a third-party API just to maintain an assistant's memory didn't sit right with me. I wanted a way to keep context local and fast.
 
-I wanted a memory layer that provided the same persistence, but allowed the user to physically own and port their agent's memory across different environments. 
+sovseal runs embedded directly inside your agent's process via the Model Context Protocol (MCP). We bundle LanceDB and Transformers.js (ONNX) to run entirely on your local CPU.
 
-sovseal runs embedded directly inside your agent's process. We bundle LanceDB and Transformers.js (ONNX) to run entirely on your local CPU.
+Here is the implementation:
+1. **Local Embeddings (<5ms recall):** We run the `nomic-embed-text` model via WebAssembly. Vector searches happen on-device, so your plaintext context never hits the network. By skipping the network hop, hot queries execute in ~4.2ms.
+2. **Client-Side Encrypted Sync:** If you want to sync state across machines or with your team, a write-behind worker serializes your local SQLite/Lance DB diffs and encrypts them using the Web Crypto API (AES-256-GCM) before pushing to a Supabase edge function. 
+3. **Portability:** Because the state lives in local files managed by an MCP server, you can port the same context between Claude Desktop, Cursor, or custom scripts without vendor lock-in.
 
-Here is how the architecture works:
-1. **<5ms Local Recall:** Semantic embeddings and vector searches happen on-device. Your plaintext context never leaves the machine. Eager warmup and LRU caching bring hot query times down to ~4.2ms.
-2. **Zero-Knowledge Cloud Sync:** If you want to sync state across machines, a write-behind worker serializes your local DB diffs, encrypts them using standard Web Crypto API AES-256-GCM, and pushes them to our Supabase edge function. The cloud only ever stores unreadable ciphertext.
-3. **True Portability:** Because it's built on Anthropic's Model Context Protocol (MCP), you own the SQLite/Lance files. You can take your memory state and instantly port it between Claude Desktop, Cursor, or custom LangChain scripts.
-
-**How to use it with Claude Desktop or Cursor:**
-It runs out of the box without requiring you to create an account, enter an email, or generate an API key. Just add this to your `claude_desktop_config.json`:
+**How to use it:**
+It runs out of the box. No accounts, no API keys. Just add this to your `claude_desktop_config.json`:
 
 ```json
 {
@@ -44,6 +42,6 @@ It runs out of the box without requiring you to create an account, enter an emai
 }
 ```
 
-Everything is fully Apache 2.0 licensed, free, and open-source. The cloud replication endpoint is written as a Deno edge function so you can easily self-host the sync layer on your own Supabase project.
+Everything is Apache 2.0 licensed. The cloud replication endpoint is written as a Deno edge function so you can easily self-host the sync layer.
 
-I would love your brutal feedback on the crypto threat model, the ONNX vector performance, and the developer experience. I'll be here in the comments to answer questions!
+I would love your feedback on the architecture, specifically our threat model for the client-side encryption sync and the ONNX vector performance in Node. I'll be in the comments to answer questions.

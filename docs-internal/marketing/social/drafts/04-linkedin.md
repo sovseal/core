@@ -1,34 +1,30 @@
 # LinkedIn Launch Draft
 
 **Target:** Enterprise Engineering Leaders, CTOs, Infosec Officers
-**Tone:** Institutional Authority, Compliance-Focused, Professional
-**Angle:** Solving the enterprise compliance bottleneck of autonomous agents.
+**Tone:** Operational Insight, Experience-Driven, Practical
+**Angle:** Solving code exposure and governance when deploying coding assistants.
 
 ---
 
-**The Infosec Bottleneck of Autonomous Agents is Solved.**
+Engineering teams are rapidly adopting AI coding assistants like Cursor and Claude Desktop, but we noticed a recurring deployment problem: **Code Exposure.**
 
-Engineering teams are racing to adopt AI agents like Cursor and Claude Desktop, but they are immediately hitting a massive compliance wall: **Agent Memory.**
+For these tools to be effective across a team, they need persistent memory—they need to remember architectural decisions, codebase rules, and past context across sessions. The default approach right now is piping those text embeddings to a hosted vector database API.
 
-For an AI agent to be truly autonomous, it needs state continuity—it has to remember decisions, codebase context, and user preferences across sessions. The challenge is that the current AI memory ecosystem relies heavily on centralized cloud APIs. 
+For engineering leaders managing compliance, sending internal source code to a third-party cloud just to give a developer's assistant "memory" creates a massive governance headache. It breaks data residency rules and complicates auditability.
 
-For enterprise Infosec teams, piping internal, unvetted source code outside the company to maintain an agent's memory state is a non-starter.
+To solve this, we built **sovseal**. It's an open-source, local-first context engine designed for team deployment.
 
-Today, we are open-sourcing the solution: **sovseal.**
+Instead of a centralized API, sovseal runs embedded directly on the developer's local machine. 
 
-sovseal is a portable, zero-knowledge memory infrastructure designed specifically for enterprise compliance and data residency. 
+1. **Local Execution:** We bundled LanceDB and ONNX so that semantic searches happen entirely on-device. The plaintext source code never leaves the developer's laptop.
+2. **Client-Side Encrypted Sync:** To share context across a team, local database changes are encrypted client-side (AES-256-GCM) before replicating. The central server only stores ciphertext, meaning your codebase rules remain entirely private.
+3. **Deployment Simplicity:** Teams can self-host the entire replication backend using our open-source Deno edge functions.
 
-Instead of acting as a network-bound API, sovseal runs embedded directly on the developer's local machine using LanceDB and ONNX. 
+We wanted to give developers the productivity of persistent AI memory without creating code exposure risks for the Infosec team. 
 
-1. **Zero-Latency Compute:** Semantic embeddings and vector searches happen on-device (<5ms recall). The plaintext never leaves the laptop.
-2. **Zero-Knowledge Cloud Sync:** To synchronize state across a team, local database diffs are encrypted client-side using AES-256-GCM before replicating to the cloud. The central server only ever stores mathematically unreadable ciphertext.
-3. **Total Data Ownership:** Because the memory state is entirely local and portable, teams can self-host the entire replication infrastructure using our open-source Deno edge functions.
-
-We have collapsed the tradeoff between AI agent capability and corporate data privacy. Your developers get frictionless, instant agent memory. Your Infosec team gets cryptographic guarantees of data residency.
-
-If you are an engineering leader exploring autonomous agents, you can audit the architecture and install the open-source MCP server today.
+If your team is deploying Cursor or Claude Desktop and struggling with context governance, you can audit our architecture and test the open-source MCP server today.
 
 🔗 Architecture Docs & Setup: sovseal.com
 🔗 GitHub Repository: github.com/sovseal/local
 
-#EngineeringLeadership #CyberSecurity #ArtificialIntelligence #OpenSource #DataResidency #SoftwareArchitecture
+#EngineeringLeadership #CyberSecurity #SoftwareEngineering #OpenSource #DataPrivacy
