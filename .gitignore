@@ -150,6 +150,9 @@ html_url.txt
 # Internal-only docs (kept on disk, not in public repo)
 # -----------------------------------------------------------------------------
 /AGENTS.md
+/docs-internal/
+/docs/internal/
+/apps/docs/test-results/
 
 # -----------------------------------------------------------------------------
 # Obsolete / archived directories (kept on disk, not in git)

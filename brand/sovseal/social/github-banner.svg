@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1728 432" role="img" aria-label="sovseal — Zero-Knowledge Memory for AI Agents">
-  <title>sovseal — Zero-Knowledge Memory for AI Agents</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1728 432" role="img" aria-label="sovseal — private memory for AI agents">
+  <title>sovseal — private memory for AI agents</title>
   <defs>
     <style>
       .wordmark { font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 900; letter-spacing: -0.045em; }
@@ -15,5 +15,5 @@
 
   <text class="wordmark" x="755.8703673469388" y="243.2" fill="#000000" font-size="188">sovseal</text>
 
-  <text class="tagline" x="864" y="347.84" fill="#000000" font-size="56" text-anchor="middle">Zero-Knowledge Memory for AI Agents</text>
+  <text class="tagline" x="864" y="347.84" fill="#000000" font-size="56" text-anchor="middle">private memory for AI agents</text>
 </svg>
