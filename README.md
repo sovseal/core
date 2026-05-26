@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./brand/sovseal/social/github-banner.png" alt="sovseal — Zero-Knowledge Memory for AI Agents">
+  <img src="./brand/sovseal/social/github-banner.png" alt="sovseal — private memory for AI agents">
 </p>
 
 <p align="center">
