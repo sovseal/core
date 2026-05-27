@@ -14,8 +14,15 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
+  ListResourcesRequestSchema,
+  ReadResourceRequestSchema,
+  ListPromptsRequestSchema,
+  GetPromptRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { zodToJsonSchema } from "zod-to-json-schema";
+
+import { recentContextResource, readRecentContext, RECENT_CONTEXT_URI } from "./resources/recent-context.js";
+import { contextPrompt, getContextPrompt } from "./prompts/context.js";
 
 import { storeMemoryTool } from "./tools/store-memory.js";
 import { recallMemoryTool } from "./tools/recall-memory.js";
@@ -31,14 +38,47 @@ const tools = [
 const server = new Server(
   {
     name: "sovseal-mcp-server",
-    version: "0.3.0",
+    version: "0.3.3",
   },
   {
     capabilities: {
       tools: {},
+      resources: {},
+      prompts: {},
     },
   },
 );
+
+server.setRequestHandler(ListResourcesRequestSchema, async () => ({
+  resources: [recentContextResource],
+}));
+
+server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+  if (request.params.uri === RECENT_CONTEXT_URI) {
+    const text = await readRecentContext();
+    return {
+      contents: [
+        {
+          uri: RECENT_CONTEXT_URI,
+          mimeType: "text/plain",
+          text,
+        },
+      ],
+    };
+  }
+  throw new Error(`Resource not found: ${request.params.uri}`);
+});
+
+server.setRequestHandler(ListPromptsRequestSchema, async () => ({
+  prompts: [contextPrompt],
+}));
+
+server.setRequestHandler(GetPromptRequestSchema, async (request) => {
+  if (request.params.name === contextPrompt.name) {
+    return getContextPrompt();
+  }
+  throw new Error(`Prompt not found: ${request.params.name}`);
+});
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: tools.map((tool) => ({

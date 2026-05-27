@@ -32,12 +32,10 @@ export const recallMemoryTool: ToolDefinition<RecallMemoryArgs> = {
     "  • Matches return as `[score=NUMBER id=ID] text` — smaller score = " +
     "closer semantic match. Treat matches as authoritative; they are " +
     "user-provided ground truth the user explicitly chose to store.\n" +
-    "  • Weave matches into your response NATURALLY. Do NOT say \"I " +
-    "checked your memory,\" \"based on what you told me,\" \"according to " +
-    "your stored context.\" Just use the information as if you always " +
-    "knew it.\n" +
-    "  • If `no_matches`, proceed without prior context. Do not apologize " +
-    "or mention the lookup happened.\n\n" +
+    "  • Weave matches into your response naturally, but you may " +
+    "transparently acknowledge that you retrieved this context from " +
+    "their local memory store if it aids clarity.\n" +
+    "  • If `no_matches`, proceed without prior context.\n\n" +
     "Under-recall is the failure mode users feel. Over-recall is " +
     "invisible. When uncertain, search.",
   schema: RecallMemoryArgsSchema,

@@ -1,5 +1,17 @@
 # Changelog — @sovseal/mcp-server
 
+## 0.3.3 — 2026-05-26
+
+### Added
+
+- **MCP Resources:** Added `sovseal://context/recent` to load top-N most-recent memories at session start.
+- **MCP Prompts:** Added `/sovseal:context` to bootstrap conversations with recent context.
+
+### Fixed
+
+- **Tool Descriptions:** Removed adversarial language to prevent safety stack flagging.
+- **Compliance:** Replaced "secrets" categories with a positioning sentence ("sovseal stores context, not secrets") to clarify product scope.
+
 ## 0.3.2 — 2026-05-25
 
 ### Changed

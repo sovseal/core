@@ -131,6 +131,40 @@ export async function getPendingMemories(
 }
 
 /**
+ * Fetch the N most recent memories ordered by descending timestamp.
+ */
+export async function getRecentMemories(
+  limit: number = 50,
+): Promise<PendingMemory[]> {
+  if (!Number.isInteger(limit) || limit <= 0) {
+    throw new Error("getRecentMemories: limit must be a positive integer");
+  }
+  const { table } = await getDb();
+  const count = await table.countRows();
+  if (count === 0) return [];
+
+  // LanceDB JS doesn't support order_by yet, so we fetch all and sort.
+  // For larger datasets, this would need a different index or strategy, 
+  // but for local agent memory it's sufficient.
+  const rows = await table
+    .select(["id", "text", "timestamp"])
+    .execute<Record<string, unknown>>();
+
+  const mapped = rows.map((row) => ({
+    id: String(row.id),
+    text: String(row.text),
+    timestamp: toBigInt(row.timestamp),
+  }));
+
+  mapped.sort((a, b) => {
+    if (a.timestamp === b.timestamp) return b.id.localeCompare(a.id);
+    return a.timestamp > b.timestamp ? -1 : 1;
+  });
+
+  return mapped.slice(0, limit);
+}
+
+/**
  * Flip a set of rows from `pending` → `synced`. Used by the background
  * worker once the edge function ACKs a block.
  */

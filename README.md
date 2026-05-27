@@ -105,6 +105,12 @@ One-line install for Claude Code:
 claude mcp add sovseal -- npx -y @sovseal/mcp-server
 ```
 
+**System Prompt Snippet (Claude Desktop / Cursor Project Instructions):**
+To ensure the AI natively uses the memory server, paste this into your custom instructions:
+```text
+This session has persistent memory via sovseal. At conversation start, check the sovseal://context/recent resource. Whenever the user shares preferences, plans, or personal context, store it via store_memory.
+```
+
 For always-on autonomous agents, switch to HTTP/SSE transport so the sovseal process outlives a single tool invocation:
 
 ```bash
