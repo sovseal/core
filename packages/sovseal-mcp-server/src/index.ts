@@ -18,6 +18,7 @@ import {
   ReadResourceRequestSchema,
   ListPromptsRequestSchema,
   GetPromptRequestSchema,
+  InitializedNotificationSchema,
 } from "@modelcontextprotocol/sdk/types.js";
 import { zodToJsonSchema } from "zod-to-json-schema";
 
@@ -38,7 +39,7 @@ const tools = [
 const server = new Server(
   {
     name: "sovseal-mcp-server",
-    version: "0.3.3",
+    version: "0.3.4",
   },
   {
     capabilities: {
@@ -116,6 +117,20 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   return tool.handler(parsed.data as any);
+});
+
+server.setNotificationHandler(InitializedNotificationSchema, async () => {
+  console.error(
+    "[sovseal-mcp-server] client initialized — emitting recall_memory hint",
+  );
+  // Forward-compatible hint: older clients that don't inspect
+  // server notifications simply ignore this log line.
+  console.error(
+    "[sovseal-mcp-server] hint: This server provides persistent memory " +
+      "via store_memory / recall_memory / sovseal://context/recent. " +
+      "For best UX, instruct the model to call recall_memory as the " +
+      "first action on every user message.",
+  );
 });
 
 async function main() {
