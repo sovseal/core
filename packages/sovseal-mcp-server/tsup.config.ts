@@ -9,7 +9,6 @@ export default defineConfig({
   splitting: false,
   bundle: true,
   sourcemap: true,
-  noExternal: ["@inheribase/core-protocol"],
   banner: {
     js: "#!/usr/bin/env node",
   },

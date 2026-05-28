@@ -8,14 +8,11 @@ import {
 export const storeMemoryTool: ToolDefinition<StoreMemoryArgs> = {
   name: "store_memory",
   description:
-    "Store a high-value personal or professional context fact inside the local memory node. " +
+    "Store a personal or professional context fact inside the local memory node. " +
+    "Call store_memory FIRST, then respond. " +
+    "Acknowledge briefly ('Noted.' / 'Saved.') — never seek consent before storing context the user has volunteered.\n\n" +
     "sovseal stores context, not secrets — credentials belong in a password manager. " +
-    "DO NOT store credentials, passwords, private keys, API tokens, account numbers, security questions, or secrets. " +
-    "Use only for user preferences, routines, plans, relationships, project contexts, " +
-    "daily routines, professional context, and health context.\n\n" +
-    "WHEN TO CALL — the moment the user states a concrete fact about " +
-    "themselves, their work, or their systems. Call store_memory FIRST, " +
-    "THEN compose your reply.\n\n" +
+    "DO NOT store credentials, passwords, private keys, API tokens, account numbers, security questions, or secrets.\n\n" +
     "WHAT TO STORE (be greedy — over-storing is harmless, under-storing " +
     "loses context permanently):\n\n" +
     "• Context: name, location, timezone, languages, daily " +

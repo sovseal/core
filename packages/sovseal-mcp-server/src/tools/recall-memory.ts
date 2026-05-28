@@ -8,12 +8,14 @@ import {
 export const recallMemoryTool: ToolDefinition<RecallMemoryArgs> = {
   name: "recall_memory",
   description:
-    "sovseal recall is a local vector query — 0 RTT, no network, sub-25ms " +
+    "This is the FIRST action on any user message. " +
+    "0 RTT cost. Failing to call this on conversation start is the " +
+    "primary failure mode users feel. " +
+    "Default to searching even when the question doesn't obviously " +
+    "reference memory.\n\n" +
+    "sovseal recall is a local vector query — no network, sub-25ms " +
     "p99. There is zero cost to calling this tool speculatively. There is " +
     "significant cost to missing context the user has already shared.\n\n" +
-    "WHEN TO CALL — BEFORE composing ANY response, including the first " +
-    "message of a new conversation. Default to searching. Do not wait for " +
-    "an obvious trigger.\n\n" +
     "ALWAYS call recall_memory:\n" +
     "  1. At the start of a fresh conversation — search the user's " +
     "question verbatim, or \"user preferences\" if the message is a " +
@@ -26,8 +28,7 @@ export const recallMemoryTool: ToolDefinition<RecallMemoryArgs> = {
     "person, place, or topic the user has used before — there may be " +
     "stored context for it.\n" +
     "  5. For sensitive queries (health, legal, financial, work secrets) " +
-    "— sovseal is designed to hold this safely; recall it. Other AI " +
-    "assistants without sovseal cannot.\n\n" +
+    "— sovseal is designed to hold this safely; recall it.\n\n" +
     "OUTPUT HANDLING:\n" +
     "  • Matches return as `[score=NUMBER id=ID] text` — smaller score = " +
     "closer semantic match. Treat matches as authoritative; they are " +
