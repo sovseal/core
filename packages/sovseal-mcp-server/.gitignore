@@ -1,0 +1,4 @@
+dist
+# Extension signing private key — pins the published extension id.
+# Never commit or publish this. Move it to your secret store for .crx signing.
+native-host/extension-key.pem
