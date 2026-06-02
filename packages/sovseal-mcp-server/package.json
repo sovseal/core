@@ -30,10 +30,14 @@
   "main": "./dist/index.js",
   "bin": {
     "sovseal-mcp-server": "./dist/index.js",
-    "mcp-server": "./dist/index.js"
+    "mcp-server": "./dist/index.js",
+    "sovseal-native-host": "./dist/native-host.js",
+    "sovseal-install-native-host": "./native-host/install.mjs"
   },
   "files": [
     "dist",
+    "native-host/install.mjs",
+    "native-host/constants.mjs",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"

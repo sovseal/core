@@ -144,9 +144,15 @@ export async function getRecentMemories(
   if (count === 0) return [];
 
   // LanceDB JS doesn't support order_by yet, so we fetch all and sort.
-  // For larger datasets, this would need a different index or strategy, 
+  // For larger datasets, this would need a different index or strategy,
   // but for local agent memory it's sufficient.
+  //
+  // `.select` only exists on a filtered query in this vectordb version, so
+  // we anchor on an always-true predicate (timestamp is set from Date.now()
+  // and is therefore always >= 0) to select every row. Mirrors the working
+  // chain in getPendingMemories above.
   const rows = await table
+    .filter("timestamp >= 0")
     .select(["id", "text", "timestamp"])
     .execute<Record<string, unknown>>();
 
@@ -181,6 +187,32 @@ export async function markMemoriesSynced(ids: string[]): Promise<void> {
     where: `id IN (${sanitized.join(",")})`,
     valuesSql: { sync_status: "'synced'" },
   });
+}
+
+/**
+ * Permanently remove a single memory row by id. Used by the browser
+ * extension sidebar's delete action via the native host. The id is
+ * sanitized exactly like {@link markMemoriesSynced} to keep it out of the
+ * SQL predicate string. Returns the number of rows deleted (0 if no match).
+ */
+export async function deleteLocal(id: string): Promise<{ deleted: number }> {
+  if (typeof id !== "string" || id.length === 0 || /['"\\]/.test(id)) {
+    throw new Error(`deleteLocal: invalid id ${JSON.stringify(id)}`);
+  }
+  const { table } = await getDb();
+  const before = await table.countRows();
+  await table.delete(`id = '${id}'`);
+  const after = await table.countRows();
+  return { deleted: Math.max(0, before - after) };
+}
+
+/**
+ * Total number of memories in the local store. Backs the native host's
+ * `status` response.
+ */
+export async function countLocal(): Promise<number> {
+  const { table } = await getDb();
+  return table.countRows();
 }
 
 function toBigInt(value: unknown): bigint {
