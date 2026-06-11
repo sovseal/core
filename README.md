@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="./brand/sovseal/social/github-banner.png" alt="sovseal — private memory for AI agents">
+  <img src="./brand/sovseal/social/github-banner.png" alt="sovseal — AI memory that never leaves your machine">
 </p>
 
 <p align="center">
-  <strong>Private memory layer for AI agents.</strong><br/>
-  Stop losing context across sessions. Portable, local-first, and zero data leaks.
+  <strong>Zero-knowledge, local-first AI memory for work you can't send to the cloud.</strong><br/>
+  One private memory across Claude, ChatGPT, Cursor, and every MCP client — plaintext physically never leaves your machine.
 </p>
 
 <p align="center">
@@ -13,6 +13,8 @@
   <a href="https://www.npmjs.com/org/sovseal">@sovseal on npm</a>
   ·
   <a href="#quickstart">Quickstart</a>
+  ·
+  <a href="#-how-sovseal-compares">How it compares</a>
   ·
   <a href="./CHANGELOG.md">Changelog</a>
 </p>
@@ -27,10 +29,22 @@
   <a href="https://nodejs.org">
     <img src="https://img.shields.io/badge/node-20%2B-43853d.svg" alt="Node">
   </a>
-  <a href="https://supabase.com/">
-    <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white" alt="Supabase">
+  <a href="./SECURITY.md">
+    <img src="https://img.shields.io/badge/security-threat_model_published-8A2BE2.svg" alt="Security">
   </a>
 </p>
+
+# Why this exists
+
+If you work with code, clients, or data you're not allowed to upload — healthcare, legal, fintech, defense, or anything under an NDA — every AI memory option today asks you to break that rule. Platform memory keeps your context on their cloud, in their walled garden, one platform at a time. Cloud memory layers route your raw conversations through third-party servers and extraction APIs.
+
+sovseal takes the other path: **all capture, embedding, and recall run on your device.** Plaintext never crosses the network. The optional sync tier ships only AES-256-GCM ciphertext — the server cannot read your memories even if it wanted to. And because it speaks MCP and rides a browser extension, it's *one* memory across every AI you use, not six silos.
+
+<!-- TODO(launch-blocker): record cross-platform recall demo — ⌘+M in Claude recalling something said in ChatGPT — save to ./brand/sovseal/demo/cross-platform-recall.gif and uncomment:
+<p align="center">
+  <img src="./brand/sovseal/demo/cross-platform-recall.gif" alt="Recalling ChatGPT context inside Claude with ⌘+M — all local" width="720">
+</p>
+-->
 
 ## Measured Performance & Benchmarks (May 2026)
 
@@ -42,30 +56,47 @@ Cloud-hosted memory layers force a tradeoff between latency, privacy, and cost. 
 | **Cold start** | `recall_memory` (first call) | ~1.2 s | — | — | 0 RTT |
 | **Single write** | `store_memory` | 3.8 ms | 7.2 ms | 12.5 ms | 0 RTT (write-behind) |
 
-All benchmarks reproduce with: `pnpm --filter @sovseal/mcp-server test bench-v2` (10K pre-seeded memories, 1K sequential queries, CPU-bound ONNX embeddings on commodity hardware).
+All benchmarks reproduce with: `pnpm --filter @sovseal/mcp-server run bench-v2` (10K pre-seeded memories, 1K sequential queries, CPU-bound ONNX embeddings on commodity hardware).
 
-**What makes it fast and secure:**
+**What makes it fast and private:**
 - **Sub-25 ms p99 recall** — semantic search is a local vector query, not an HTTP call.
-- **Zero-knowledge by construction** — AES-256-GCM encryption before leaving the device.
+- **On-device embeddings** — a pinned, hash-verified 384-dim MiniLM model (~22 MB quantized ONNX) runs locally. No embedding API, no per-call cost.
+- **Zero-knowledge sync** — when replication is enabled, AES-256-GCM encryption happens before any byte leaves the device. The server stores ciphertext it cannot decrypt.
 - **Verified Semantic Recall (VSR)** — every load re-derives `sha256(canonicalize(payload))` and fails closed on mismatch.
 - **Deterministic lineage** — snapshot graph enables byte-equal state restoration.
 
 # Introduction
 
-[sovseal](https://sovseal.com) gives autonomous agents and AI assistants persistent, portable context that you actually own. It drops into any MCP-compatible client and stops your agents from forgetting workflows across sessions. Built for true portability and privacy, it guarantees zero data leaks by running entirely local-first with zero-knowledge cloud sync.
+[sovseal](https://sovseal.com) gives AI assistants and autonomous agents persistent, portable context that you actually own. It drops into any MCP-compatible client, captures from the major chat platforms via a browser extension, and keeps your plaintext where it belongs: on your hardware.
 
 ### Key Features & Use Cases
 
 **Core Capabilities:**
 - **Local-First Semantic Memory**: On-device LanceDB + 384-dim Transformers.js embeddings for 0-RTT recall.
-- **Zero-Knowledge Architecture**: The server only sees ciphertext. End-to-end AES-256-GCM.
+- **Cross-Platform Capture**: The browser extension captures and recalls across ChatGPT, Claude, Perplexity, Grok, Gemini, and DeepSeek — one memory, six platforms, ⌘/Ctrl+M anywhere.
+- **Zero-Knowledge Sync (optional)**: Replication ships only end-to-end AES-256-GCM ciphertext. Local-only mode works fully offline with no account.
 - **Write-Behind Replication**: Tool calls return on local commit; ciphertext sync happens asynchronously.
 - **Developer-Friendly**: Drop-in MCP server, Node SDK, and self-hosted edge endpoints.
 
-**Applications:**
-- **AI Coding Assistants**: Claude Desktop, Cursor, and Windsurf need persistent, private memory across long sessions.
-- **Agent Frameworks**: ElizaOS, Hermes, CrewAI, and LangGraph natively consume MCP.
-- **Privacy-Sensitive Teams**: Healthcare, legal, and defense teams that require plaintext to stay on-device.
+**Who it's for:**
+- **Privacy-Constrained Teams**: Healthcare, legal, fintech, and defense-adjacent teams whose policies require plaintext to stay on-device.
+- **AI Power Users**: People working across Claude Desktop, Cursor, ChatGPT, and more who are tired of six AIs with six separate amnesias.
+- **Agent Frameworks**: ElizaOS, Hermes, CrewAI, and LangGraph consume the MCP server natively — local memory with no per-call API bill.
+
+## ⚖️ How sovseal compares
+
+An honest map, because you'll ask anyway:
+
+| | Platform-native memory (ChatGPT / Claude) | Cloud memory layers (mem0, Zep, hosted MCP memories) | **sovseal** |
+|---|---|---|---|
+| **Where plaintext lives** | Provider's cloud | Provider's cloud, or your servers (self-host = your ops) | **Your device only** |
+| **Extraction pipeline** | Provider-internal | Typically an LLM API call on your raw text | **On-device embeddings; no LLM in the loop** |
+| **Works across platforms** | No — each platform is a silo | Yes (via their cloud) | **Yes — locally, via MCP + extension** |
+| **Offline** | No | No (cloud) / partial (self-host) | **Yes** |
+| **Sync model** | Provider-controlled | Server reads your data | **Server sees ciphertext only** |
+| **Cost per recall** | Subscription-gated | API/hosting cost | **$0, local compute** |
+
+What you give up with sovseal, stated plainly: there's no cloud LLM doing clever extraction on your behalf (by design — that's the leak we exist to prevent), and you are responsible for your own key (see [Threat Model](#-threat-model--read-this-before-depending-on-it)). If neither of those matters to you and you live inside one platform, its native memory may be all you need. If they do matter, nothing else in this table does what the right-hand column does.
 
 ## 🚀 Quickstart Guide <a name="quickstart"></a>
 
@@ -73,14 +104,12 @@ All benchmarks reproduce with: `pnpm --filter @sovseal/mcp-server test bench-v2`
 
 sovseal exposes one protocol with three delivery shapes. Pick by where your code runs:
 
-| | **MCP Server** | **Node SDK** | **Self-Hosted Edge** |
+| | **MCP Server** | **Browser Extension** | **Node SDK / Self-Hosted** |
 |---|---|---|---|
-| **Best for** | Any MCP-compatible client or agent framework | In-process import inside a Node/TS service | Full data residency on infra you control |
-| **Install** | `npx -y @sovseal/mcp-server` | `npm install @sovseal/sdk` | `supabase functions deploy v2-agent-state` |
-| **Transport** | stdio · HTTP · SSE | Direct function calls | HTTPS to your endpoint |
-| **Auth** | Self-asserting (`sov_proj_<uuid>`) | API key or self-asserting | Bring your own |
-| **Recall latency**| 0 RTT (local LanceDB) | 0 RTT (local LanceDB) | 0 RTT (local LanceDB) |
-| **Cost** | Free | Free | Your Supabase bill |
+| **Best for** | Claude Desktop/Code, Cursor, Windsurf, Zed, agent frameworks | ChatGPT, Claude.ai, Perplexity, Grok, Gemini, DeepSeek in the browser | In-process use in a Node/TS service; full data residency |
+| **Install** | `npx -y @sovseal/mcp-server` | Chrome Web Store + local host installer | `npm install @sovseal/sdk` |
+| **Recall latency** | 0 RTT (local LanceDB) | 0 RTT (Native Messaging to local engine) | 0 RTT (local LanceDB) |
+| **Cost** | Free | Free | Free (self-hosted: your Supabase bill) |
 
 ### MCP Server
 
@@ -117,9 +146,19 @@ For always-on autonomous agents, switch to HTTP/SSE transport so the sovseal pro
 SOVSEAL_TRANSPORT=sse SOVSEAL_PORT=4040 npx -y @sovseal/mcp-server
 ```
 
+### Browser Extension
+
+For the AI platforms that don't speak MCP. The extension bridges ChatGPT, Claude.ai, Perplexity, Grok, Gemini, and DeepSeek to the same on-device engine over Native Messaging — capture-on-send as you chat, ⌘/Ctrl+M to recall anywhere, with per-site toggles and one-click delete.
+
+1. Install from the Chrome Web Store, then run the one-time local host installer.
+2. Confirm the popup shows **"On-device engine connected."**
+3. Chat normally; press ⌘/Ctrl+M in any supported platform to recall.
+
+Everything the extension captures lives in the same local database the MCP server reads — tell Claude.ai something once, and Claude Code already knows it.
+
 ### Node SDK (Library)
 
-When you're building a backend service and want to manage agent state snapshot persistence programmatically, import the Node SDK client. It manages end-to-end AES-256-GCM encryption client-side and replicates checkpoints to your persistence cloud tier.
+When you're building a backend service and want to manage agent state persistence programmatically, import the Node SDK client. It performs end-to-end AES-256-GCM encryption client-side and replicates checkpoints to a sync endpoint you choose.
 
 ```bash
 npm install @sovseal/sdk
@@ -144,9 +183,10 @@ const receipt = await client.snapshot({
     parent_snapshot: null,
     policy_hash: "0000000000000000000000000000000000000000000000000000000000000000",
     timestamp: new Date().toISOString(),
-    wallet_balances: { USDC: { "8453": "50000000" } }, // $50 in 6 decimals
     active_context: {
-      preference: "Customer prefers wire transfers over ACH for >$50k settlements."
+      project: "acme-migration",
+      decisions: ["Postgres over Mongo — team expertise", "Cut scope: no SSO in v1"],
+      open_question: "Client prefers staged rollout; confirm dates with their ops lead."
     }
   }
 });
@@ -157,10 +197,9 @@ const { receipt: latestReceipt, ciphertextUrl } = await client.restore({
 });
 ```
 
-
 ### Self-Hosted Edge
 
-The replication endpoint is a Deno edge function — open source, deployable to any Supabase project for full data-residency control. 
+The replication endpoint is a Deno edge function — open source, deployable to any Supabase project for full data-residency control.
 
 ```bash
 # From the repo root
@@ -172,64 +211,6 @@ export SOVSEAL_ENDPOINT="https://<your-project>.supabase.co/functions/v1/v2-agen
 ```
 
 Source: [supabase/functions/v2-agent-state/](supabase/functions/v2-agent-state/).
-
-### Basic Usage
-
-Drop-in patterns for an agent loop using the `@sovseal/sdk`:
-
-```typescript
-import OpenAI from "openai";
-import { AgentStateClient, CryptoService, decryptJson } from "@sovseal/sdk";
-
-const openai = new OpenAI();
-const client = new AgentStateClient({
-  endpoint: "https://your-project.supabase.co/functions/v1/v2-agent-state",
-  apiKey: "sov_proj_your_project_uuid",
-});
-const key = await CryptoService.generateAESKey();
-
-async function chatWithMemory(agentId: string, message: string) {
-  let context = "";
-  try {
-    // Restore latest state snapshot
-    const { receipt, ciphertextUrl } = await client.restore({ agentId });
-    const res = await fetch(ciphertextUrl);
-    const encryptedBytes = new Uint8Array(await res.arrayBuffer());
-    
-    // Decrypt the ciphertext client-side using the local AES key
-    const payload = await decryptJson(encryptedBytes, key);
-    context = JSON.stringify(payload.active_context);
-  } catch (err) {
-    console.log("No previous state snapshot found or failed to restore");
-  }
-
-  const reply = await openai.chat.completions.create({
-    model: "gpt-5-mini",
-    messages: [
-      { role: "system", content: `You are a helpful assistant.\nContext:\n${context}` },
-      { role: "user", content: message },
-    ],
-  });
-
-  const assistant = reply.choices[0].message.content ?? "";
-
-  // Save the updated state snapshot
-  await client.snapshot({
-    key,
-    payload: {
-      agent_id: agentId,
-      sequence_number: 1, // Incremented in a production agent loop
-      parent_snapshot: null,
-      policy_hash: "0000000000000000000000000000000000000000000000000000000000000000",
-      timestamp: new Date().toISOString(),
-      wallet_balances: {},
-      active_context: { lastMessage: message, reply: assistant }
-    }
-  });
-  
-  return assistant;
-}
-```
 
 ## 🔗 Integrations & Agent Frameworks
 
@@ -254,11 +235,30 @@ All of these consume the same MCP server through their first-class MCP support. 
 
 ## 🔒 Threat Model — Read this before depending on it
 
-- **Confidentiality.** AES-256-GCM with a 96-bit random IV per snapshot. The server cannot read your context.
+We publish exactly what is protected, what isn't yet, and what's on us versus on you. Full detail in [SECURITY.md](./SECURITY.md).
+
+**Guarantees that hold today:**
+- **Sync confidentiality.** AES-256-GCM with a 96-bit random IV per snapshot, encrypted before transmission. The sync server stores ciphertext it cannot read.
 - **Integrity (VSR).** Every recall re-derives `sha256(canonicalize(payload))` and compares against the stored `client_payload_hash`. Corrupted storage fails closed.
+- **No third-party processing.** Embeddings are computed on-device by a version-pinned, hash-verified model. Your text is never sent to an embedding or extraction API.
 - **Authentication.** Bearer token = `sov_proj_<uuid v4>` in `~/.sovseal/config.json`.
 - **Storage.** Ciphertext lands in a Supabase Storage bucket. Object paths are SHA-256-derived and unguessable without your `project_id`.
-- **Loss.** Lose `~/.sovseal/config.json` → lose every snapshot ever made. There is no escrow, no recovery flow. Back it up.
+
+**Honest status — hardening in flight (v0.3.5):**
+
+| Control | Status |
+|---|---|
+| Zero-knowledge replication (AES-256-GCM + content hashing) | ✅ Shipped |
+| On-device, hash-pinned embedding model | ✅ Shipped |
+| Identifier sanitization against query-predicate injection | ✅ Shipped |
+| Local database encryption at rest | 🔄 v0.3.5 — today the local store relies on filesystem permissions (0700) |
+| Master key in OS keychain (currently a 0600 config file) | 🔄 v0.3.5 |
+| Programmatic secret redaction before any write | 🔄 v0.3.5 — today this is enforced at the prompt level only |
+| Model integrity verified strictly before load | 🔄 v0.3.5 |
+
+If your threat model includes an attacker with read access to your local filesystem, wait for v0.3.5 or follow [SECURITY.md](./SECURITY.md) mitigations. We'd rather tell you that here than have you find out later.
+
+- **Key loss.** Lose `~/.sovseal/config.json` → lose every synced snapshot ever made. There is no escrow, no recovery flow, no backdoor — that's the point. Back it up.
 
 ## 🤝 Contributing
 
@@ -272,19 +272,20 @@ Test (unit + integration + crypto round-trip):
 
 ```bash
 pnpm --filter @sovseal/mcp-server test
-pnpm --filter @sovseal/mcp-server test bench-v2
+pnpm --filter @sovseal/mcp-server run bench-v2
 ```
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## 🗺️ Roadmap
 
-The core open-source modules — the stdio/SSE MCP server, Node SDK, and self-hosted Supabase edge functions — are fully production-ready, free forever, and licensed under Apache 2.0.
+The core open-source modules — the stdio/SSE MCP server, browser extension, Node SDK, and self-hosted Supabase edge functions — are stable, free, and licensed under Apache 2.0.
 
-Upcoming capabilities on our public roadmap:
-- **Hosted sync tier** — managed, high-availability replication for teams that don't want to run their own edge function.
-- **Wallet-key mode** — opt-in Arweave permanence via Base L2 and Irys.
-- **Native framework adapters** — specialized adapters for environments where MCP isn't a direct fit.
+Next up, in order:
+- **v0.3.5 — Security hardening + first intelligence**: local at-rest encryption, OS-keychain key custody, code-enforced secret redaction, and the start of typed memory (episodic / semantic / procedural) with reinforcement-aware recall — so sovseal remembers what you've *tried*, not just what you've said.
+- **Ambient capture**: deterministic session observation for Claude Code and transcript-capable clients — memory that forms without anyone remembering to store it.
+- **Hosted sync tier** — managed, high-availability ciphertext replication for teams that don't want to run their own edge function. (Still zero-knowledge: we host bytes we cannot read.)
+- **Wallet-key mode (opt-in)** — Arweave permanence via Base L2 and Irys, for users who want their encrypted snapshots to outlive any company, including ours. Entirely optional; the core product has no blockchain dependency.
 
 Track progress in [CHANGELOG.md](./CHANGELOG.md) and the issue tracker.
 
@@ -292,15 +293,16 @@ Track progress in [CHANGELOG.md](./CHANGELOG.md) and the issue tracker.
 
 - Quickstart: see the [Quickstart Guide](#quickstart) above
 - Integrations: see [Integrations & Agent Frameworks](#-integrations--agent-frameworks)
-- Source: [`packages/sovseal-mcp-server/`](packages/sovseal-mcp-server/) · [`supabase/functions/v2-agent-state/`](supabase/functions/v2-agent-state/)
+- Security: [SECURITY.md](./SECURITY.md)
+- Source: [`packages/sovseal-mcp-server/`](packages/sovseal-mcp-server/) · [`apps/extension/`](apps/extension/) · [`supabase/functions/v2-agent-state/`](supabase/functions/v2-agent-state/)
 - Release notes: [`packages/sovseal-mcp-server/CHANGELOG.md`](packages/sovseal-mcp-server/CHANGELOG.md)
 - Issues & PRs: this repository
 - Contact: founders@sovseal.com
 
 ## ⚖️ License
 
-[Apache 2.0](./LICENSE) — for the entire public surface (MCP server, SDK, core protocol, edge function, docs). Fork it, ship it, run it however you like.
+[Apache 2.0](./LICENSE) — for the entire public surface (MCP server, extension, SDK, core protocol, edge function, docs). Fork it, ship it, run it however you like.
 
 <div align="center">
-  <sub>Built by the sovseal team — local-first, zero-knowledge, free.</sub>
+  <sub>Built by the sovseal team — local-first, zero-knowledge sync, free.</sub>
 </div>

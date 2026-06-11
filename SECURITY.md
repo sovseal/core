@@ -1,15 +1,16 @@
 # Security Policy
 
 ## Scope
-This policy covers the core SovSeal protocol, including but not limited to:
+This policy covers the core sovseal protocol, including but not limited to:
 - `@sovseal/mcp-server`
 - `@sovseal/sdk`
+- The browser extension (`apps/extension`)
 - Self-hosted edge endpoints (e.g. `supabase/functions/v2-agent-state/`)
 
 ## Reporting a Vulnerability
-We take the security of the zero-knowledge memory architecture very seriously. 
+We take the security of the zero-knowledge memory architecture very seriously.
 
-If you discover a vulnerability, please report it via email to [security@sovseal.com](mailto:security@sovseal.com). 
+If you discover a vulnerability, please report it via email to [security@sovseal.com](mailto:security@sovseal.com).
 
 Please provide:
 - A description of the vulnerability and its impact
@@ -25,3 +26,45 @@ We will not pursue legal action against security researchers who:
 - Do not exploit the vulnerability beyond what is necessary to demonstrate it.
 - Allow us the 90-day window to remediate the issue before public disclosure.
 - Make a good faith effort to avoid privacy violations, data destruction, and interruption or degradation of our service.
+
+---
+
+# Threat Model & Security Status
+
+We believe a privacy product earns trust by publishing what is protected, what is not yet protected, and who carries each risk — before anyone has to discover it themselves. This section is the authoritative version of the status table in the README, maintained against an internal security review of the codebase.
+
+## Architecture in one paragraph
+
+All memory capture, embedding (pinned on-device MiniLM, quantized ONNX), and vector search run locally. The local store is LanceDB under `~/.sovseal/db` (created `0700`). Replication is optional and write-behind: payloads are encrypted with AES-256-GCM (96-bit random IV per snapshot) **on the device** before transmission; the sync server stores ciphertext and content hashes only and holds no decryption keys. Integrity is enforced by Verified Semantic Recall: every load re-derives `sha256(canonicalize(payload))` and fails closed on mismatch.
+
+## What holds today
+
+| Guarantee | Mechanism |
+|---|---|
+| Sync server cannot read your memories | Client-side AES-256-GCM before any byte leaves the device; server stores ciphertext + hashes |
+| No third-party processing of your text | Embeddings computed on-device by a version-pinned, hash-checked model; no embedding or extraction API calls |
+| Tamper detection on recall | VSR content hashing, fail-closed |
+| Storage path privacy | Object paths are SHA-256-derived; unguessable without your `project_id` |
+| Query-predicate injection resistance | Identifier sanitization on memory IDs in delete/sync paths |
+
+## Known gaps and remediation timeline
+
+These are open findings from our internal review, published deliberately. If your threat model includes any of the attackers below, read this table before depending on sovseal.
+
+| # | Finding | Risk carried today | Status |
+|---|---|---|---|
+| 1 | **Local store is not encrypted at rest.** Memory text and vectors are plaintext inside `~/.sovseal/db`, protected only by `0700` directory permissions. | An attacker, process, or backup system with read access to your home directory can read stored memories. Zero-knowledge currently holds against the *server*, not against local filesystem compromise. | 🔄 Fix in v0.3.5: field-level AES-256-GCM encryption of memory content before the database write |
+| 2 | **Master key custody.** The 32-byte master key is stored base64-encoded in `~/.sovseal/config.json` (`0600`), not in the OS keychain. | Home-directory read access yields the key that decrypts every synced snapshot. | 🔄 Fix in v0.3.5: OS keychain custody (macOS Keychain / Windows Credential Manager / libsecret) with HKDF domain separation between sync and at-rest keys |
+| 3 | **No programmatic secret redaction.** The instruction not to store credentials is enforced at the prompt level only; nothing in code scans content before it is written. | A confused or adversarially prompted model can persist API keys or passwords into the local store (compounding finding 1). | 🔄 Fix in v0.3.5: code-enforced redaction pass (structural patterns + entropy scan) running before embedding and before any write |
+| 4 | **Model integrity check ordering.** SHA-256 pins on the embedding model are verified after the runtime has already instantiated the model files, and the first-run download path is the highest-risk window. | A tampered local model file could execute before the hash check fires. | 🔄 Fix in v0.3.5: unconditional verify-before-load on all pinned files, including the first-run download path |
+| 5 | **Key loss is unrecoverable.** No escrow, no recovery flow, no backdoor. | Lose `~/.sovseal/config.json` and every synced snapshot is permanently unreadable. | ✋ By design. Back up your config file. We cannot help you recover it — that is the point of zero-knowledge. |
+
+Interim mitigations until v0.3.5 ships: enable full-disk encryption (FileVault / BitLocker), exclude `~/.sovseal` from cloud-synced backup tools, and do not paste credentials into AI conversations that have memory capture enabled.
+
+## What we will never do
+
+- Hold keys that can decrypt user content.
+- Add a recovery backdoor to the sync tier.
+- Send memory plaintext to any third-party API, including for "smart" extraction features.
+
+Changes to this document are tracked in git history; the v0.3.5 remediation items above are tracked in [CHANGELOG.md](./CHANGELOG.md) and the issue tracker.

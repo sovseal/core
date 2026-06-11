@@ -1,0 +1,26 @@
+{
+  "name": "@sovseal/extension",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "sovseal browser extension — truly local, zero-knowledge memory for ChatGPT, Claude, Perplexity, Grok, Gemini and DeepSeek. Bridges to the on-device engine via Native Messaging.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.2.0",
+    "@types/chrome": "^0.0.287",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "~5.9.3",
+    "vite": "^6.4.2"
+  }
+}

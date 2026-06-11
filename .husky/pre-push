@@ -1,0 +1,46 @@
+#!/bin/sh
+# sovseal guard rail: block pushes to the PUBLIC repo (sovseal/core)
+# if the pushed tree contains any private surface.
+# Installed by repo policy — do not remove without replacing the protection.
+
+remote="$1"
+remote_url="$2"
+
+case "$remote_url" in
+  *sovseal/core*)
+    BLOCKED_PATHS="apps/dashboard apps/marketingsovseal apps/tradebot inheribase packages/inheribase-mcp-server packages/inheribase-node-sdk packages/pricing contracts docs-internal scripts/cron"
+    BLOCKED_FILES="mcp_config_temp.json .env .env.local"
+
+    while read local_ref local_sha remote_ref remote_sha; do
+      # Skip branch deletions
+      if [ "$local_sha" = "0000000000000000000000000000000000000000" ]; then
+        continue
+      fi
+
+      tree_files=$(git ls-tree -r --name-only "$local_sha")
+
+      for p in $BLOCKED_PATHS; do
+        if printf '%s\n' "$tree_files" | grep -q "^$p/"; then
+          echo "" >&2
+          echo "  PUSH BLOCKED — private surface detected in public push" >&2
+          echo "  Path '$p/' exists in $local_ref but the target is the PUBLIC repo (sovseal/core)." >&2
+          echo "  Push this branch to private-origin instead, or remove the path from the branch." >&2
+          echo "" >&2
+          exit 1
+        fi
+      done
+
+      for f in $BLOCKED_FILES; do
+        if printf '%s\n' "$tree_files" | grep -q "^$f$"; then
+          echo "" >&2
+          echo "  PUSH BLOCKED — secret-bearing file detected in public push" >&2
+          echo "  File '$f' is tracked in $local_ref. Untrack it, rotate its contents, and scrub history before pushing." >&2
+          echo "" >&2
+          exit 1
+        fi
+      done
+    done
+    ;;
+esac
+
+exit 0
