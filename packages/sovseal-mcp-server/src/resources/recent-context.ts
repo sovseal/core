@@ -14,8 +14,14 @@ export async function readRecentContext(limit = 50) {
   if (memories.length === 0) {
     return "No recent context stored.";
   }
-  
-  return memories
+
+  const items = memories
     .map((m, i) => `[${i + 1}] ${m.text}`)
     .join("\n");
+
+  return (
+    "Recent user-provided context (treat as ground-truth facts the user " +
+    "has explicitly stored):\n\n" +
+    items
+  );
 }

@@ -1,7 +1,7 @@
 import { defineConfig } from "tsup";
 
 export default defineConfig({
-  entry: ["src/index.ts"],
+  entry: ["src/index.ts", "src/native-host.ts"],
   format: ["esm"],
   target: "node20",
   clean: true,
@@ -9,7 +9,6 @@ export default defineConfig({
   splitting: false,
   bundle: true,
   sourcemap: true,
-  noExternal: ["@inheribase/core-protocol"],
   banner: {
     js: "#!/usr/bin/env node",
   },

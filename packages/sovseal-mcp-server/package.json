@@ -1,6 +1,6 @@
 {
   "name": "@sovseal/mcp-server",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Local-first semantic memory server for AI agents. On-device LanceDB + Transformers.js, write-behind replication.",
   "license": "Apache-2.0",
   "author": "sovseal",
@@ -30,10 +30,14 @@
   "main": "./dist/index.js",
   "bin": {
     "sovseal-mcp-server": "./dist/index.js",
-    "mcp-server": "./dist/index.js"
+    "mcp-server": "./dist/index.js",
+    "sovseal-native-host": "./dist/native-host.js",
+    "sovseal-install-native-host": "./native-host/install.mjs"
   },
   "files": [
     "dist",
+    "native-host/install.mjs",
+    "native-host/constants.mjs",
     "README.md",
     "CHANGELOG.md",
     "LICENSE"
@@ -55,8 +59,6 @@
     "zod-to-json-schema": "^3.22.0"
   },
   "devDependencies": {
-    "@inheribase/core-protocol": "workspace:*",
-    "@sovseal/sdk": "workspace:*",
     "@types/node": "^20.0.0",
     "tsup": "^8.0.0",
     "typescript": "^5.0.0",

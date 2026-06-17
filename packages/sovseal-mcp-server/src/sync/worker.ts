@@ -17,7 +17,7 @@
  * the row will pick it up on next start.
  */
 
-import { CryptoService } from "@inheribase/core-protocol";
+import { webcrypto } from "node:crypto";
 
 import { getPendingMemories, markMemoriesSynced } from "../local/index.js";
 import {
@@ -91,7 +91,8 @@ function bytesToBase64(bytes: Uint8Array): string {
 }
 
 async function sha256Hex(data: Uint8Array): Promise<string> {
-  return CryptoService.sha256Hex(data);
+  const digest = await webcrypto.subtle.digest("SHA-256", data);
+  return Buffer.from(digest).toString("hex");
 }
 
 /** SHA-256(prev || block_hash) — both inputs hex. */
@@ -142,8 +143,21 @@ export async function prepareBlock(
   sequenceNumber: number,
   encryptionKey: CryptoKey,
 ): Promise<PreparedBlock> {
-  const { encryptJson } = await import("@inheribase/core-protocol");
-  const ciphertext = await encryptJson({ memories }, encryptionKey);
+  // Inline AES-256-GCM encryption (was @inheribase/core-protocol encryptJson)
+  const plaintext = new TextEncoder().encode(
+    JSON.stringify({ memories }),
+  );
+  const iv = webcrypto.getRandomValues(new Uint8Array(12));
+  const encrypted = await webcrypto.subtle.encrypt(
+    { name: "AES-GCM", iv },
+    encryptionKey,
+    plaintext,
+  );
+  // Concat IV || ciphertext (matches encryptJson layout)
+  const ciphertext = new Uint8Array(iv.length + encrypted.byteLength);
+  ciphertext.set(iv, 0);
+  ciphertext.set(new Uint8Array(encrypted), iv.length);
+
   const blockHash = await sha256Hex(ciphertext);
   return {
     rowIds: memories.map((m) => m.id),

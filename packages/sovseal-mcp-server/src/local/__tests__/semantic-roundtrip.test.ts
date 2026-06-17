@@ -20,7 +20,13 @@ import { beforeAll, afterAll, afterEach, describe, expect, test } from "vitest";
 
 import { EMBEDDING_DIM, MEMORIES_TABLE, initLocalDb } from "../db.js";
 import { generateEmbedding, resetEmbeddingPipelineForTests } from "../embeddings.js";
-import { queryLocal, resetLocalDbForTests, storeLocal } from "../index.js";
+import {
+  countLocal,
+  deleteLocal,
+  queryLocal,
+  resetLocalDbForTests,
+  storeLocal,
+} from "../index.js";
 
 const SHARED_MODEL_DIR = join(homedir(), ".sovseal", "models");
 
@@ -127,6 +133,33 @@ describe("NOMOREDELAY P1 — local semantic engine", () => {
         expect(typeof hit.text).toBe("string");
         expect(Number.isFinite(hit.score)).toBe(true);
       }
+    },
+    300_000,
+  );
+
+  test(
+    "deleteLocal removes a single row and countLocal tracks the store size",
+    async () => {
+      dbDir = await freshDbDir("delete");
+
+      expect(await countLocal()).toBe(0);
+
+      const a = await storeLocal("alpha row to keep");
+      const b = await storeLocal("bravo row to delete");
+      await storeLocal("charlie row to keep");
+      expect(await countLocal()).toBe(3);
+
+      const res = await deleteLocal(b.id);
+      expect(res.deleted).toBe(1);
+      expect(await countLocal()).toBe(2);
+
+      // Deleting an unknown id is a no-op, not an error.
+      const missing = await deleteLocal(a.id.replace(/.$/, "0"));
+      expect(missing.deleted).toBe(0);
+      expect(await countLocal()).toBe(2);
+
+      // Injection-shaped ids are rejected before touching the predicate.
+      await expect(deleteLocal("x' OR '1'='1")).rejects.toThrow(/invalid id/);
     },
     300_000,
   );

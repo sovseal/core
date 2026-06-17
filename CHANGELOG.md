@@ -9,6 +9,11 @@ When updating this changelog, write entirely from the perspective of the DEVELOP
 - Format as standard user-facing release notes.
 -->
 
+## [5.6.1] - 2026-06-01
+
+### 🛠 Fixes & Improvements
+- **MCP Server Stabilities**: Resolved a critical issue where remote MCP servers (`cloudflare` and Google `stitch`) were missing their required authorization and API key headers in `args`, which caused the entire MCP client startup to block or hang while waiting for interactive browser OAuth.
+- **Enabled Core MCP Servers**: Enabled the Google `stitch` and `TestSprite` MCP servers by default to ensure all automated workflows and tests (e.g. prompt-to-code design pipeline and UI design actions) can access their respective tools.
 ## [5.5.5] - 2026-05-22
 
 ### 🛠 Fixes & Improvements
