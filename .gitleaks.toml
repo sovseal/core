@@ -1,0 +1,28 @@
+# .gitleaks.toml
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Global allowlist for tests, docs, mock data, and public keys"
+paths = [
+    '''node_modules/''',
+    '''\.next/''',
+    '''\.turbo/''',
+    '''dist/''',
+    '''tests/.*''',
+    '''.*__tests__/.*''',
+    '''apps/docs/.*''',
+    '''docs-internal/.*''',
+    '''docs/.*''',
+    '''scratch/.*''',
+    '''\.env\.example''',
+    '''\.env\.production\.check''',
+    '''apps/extension/src/manifest\.config\.ts''',
+    '''apps/dashboard/src/data/fixtures\.ts''',
+    '''apps/dashboard/src/pages/webhooks\.tsx''',
+    '''apps/dashboard/src/pages/settings\.tsx''',
+    '''apps/dashboard/src/store/index\.ts''',
+    '''.*contract/test/.*''',
+    '''contract/test/.*''',
+    '''scripts/verify-dev-funds\.ts'''
+]
