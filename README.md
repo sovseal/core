@@ -109,7 +109,7 @@ sovseal exposes one protocol with three delivery shapes. Pick by where your code
 | **Best for** | Claude Desktop/Code, Cursor, Windsurf, Zed, agent frameworks | ChatGPT, Claude.ai, Perplexity, Grok, Gemini, DeepSeek in the browser | In-process use in a Node/TS service; full data residency |
 | **Install** | `npx -y @sovseal/mcp-server` | Chrome Web Store + local host installer | `npm install @sovseal/sdk` |
 | **Recall latency** | 0 RTT (local LanceDB) | 0 RTT (Native Messaging to local engine) | 0 RTT (local LanceDB) |
-| **Cost** | Free | Free | Free (self-hosted: your Supabase bill) |
+| **Cost** | Free (Hobby) | Free (Hobby) | Paid (Starter or above for self-hosted sync) |
 
 ### MCP Server
 
@@ -251,14 +251,15 @@ We publish exactly what is protected, what isn't yet, and what's on us versus on
 | Zero-knowledge replication (AES-256-GCM + content hashing) | ✅ Shipped |
 | On-device, hash-pinned embedding model | ✅ Shipped |
 | Identifier sanitization against query-predicate injection | ✅ Shipped |
-| Local database encryption at rest | 🔄 v0.3.5 — today the local store relies on filesystem permissions (0700) |
-| Master key in OS keychain (currently a 0600 config file) | 🔄 v0.3.5 |
-| Programmatic secret redaction before any write | 🔄 v0.3.5 — today this is enforced at the prompt level only |
-| Model integrity verified strictly before load | 🔄 v0.3.5 |
+| Local database encryption at rest | ✅ Shipped v0.3.5 — field-level AES-256-GCM on memory content (embedding vector still in the clear) |
+| Master key in OS keychain (HKDF-separated at-rest & sync subkeys) | ✅ Shipped v0.3.5 |
+| Programmatic secret redaction before any write | 🔄 Planned — today this is enforced at the prompt level only |
+| Model integrity verified strictly before load | ✅ Shipped v0.3.5 — incl. the first-run download path |
 
-If your threat model includes an attacker with read access to your local filesystem, wait for v0.3.5 or follow [SECURITY.md](./SECURITY.md) mitigations. We'd rather tell you that here than have you find out later.
+As of v0.3.5, memory content is encrypted at rest and the master key lives in the OS keychain, so local filesystem read no longer exposes your memories. Programmatic secret redaction is still prompt-level only — see [SECURITY.md](./SECURITY.md). We'd rather tell you that here than have you find out later.
 
-- **Key loss.** Lose `~/.sovseal/config.json` → lose every synced snapshot ever made. There is no escrow, no recovery flow, no backdoor — that's the point. Back it up.
+- **Key loss (Hobby/Starter/Growth).** Lose `~/.sovseal/config.json` → lose every synced snapshot ever made. There is no escrow or recovery flow on these tiers.
+- **Key recovery (Pro/Enterprise).** Pro tier adds managed key recovery via Shamir-split escrow custody, and Enterprise adds HSM-backed key recovery.
 
 ## 🤝 Contributing
 

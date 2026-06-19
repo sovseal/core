@@ -31,7 +31,7 @@ const ALL_SITE_MATCHES: string[] = Object.values(SITES).flat();
 
 export default defineManifest({
   manifest_version: 3,
-  name: "sovseal — local memory for AI",
+  name: "sovseal — private memory for AI",
   version: "0.1.0",
   description:
     "Truly local, zero-knowledge memory across ChatGPT, Claude, Perplexity, Grok, Gemini and DeepSeek. On-device. Encrypted. Yours.",
