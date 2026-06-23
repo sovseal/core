@@ -10,6 +10,10 @@ case "$remote_url" in
   *sovseal/core*)
     BLOCKED_PATHS="apps/dashboard apps/marketingsovseal apps/tradebot inheribase packages/inheribase-mcp-server packages/inheribase-node-sdk packages/pricing contracts docs-internal scripts/cron"
     BLOCKED_FILES="mcp_config_temp.json .env .env.local"
+    # Only this workflow may exist in the public repo; any other is internal CI.
+    ALLOWED_WORKFLOW=".github/workflows/secret-scan.yml"
+    # Legacy/internal markers that must never reach the public repo via config files.
+    BLOCKED_MARKERS='inheribase|dashboard-legacy|status-legacy|playground-legacy|cron:dms|orchestrator-daemon|vercel-build\.sh|dms-auto-release'
 
     while read local_ref local_sha remote_ref remote_sha; do
       # Skip branch deletions
@@ -37,6 +41,34 @@ case "$remote_url" in
           echo "  File '$f' is tracked in $local_ref. Untrack it, rotate its contents, and scrub history before pushing." >&2
           echo "" >&2
           exit 1
+        fi
+      done
+
+      # GATE: only the secret-scan workflow may ship publicly. Internal CI
+      # (deploy.yml etc.) leaks deployment topology and has no public role.
+      stray_wf=$(printf '%s\n' "$tree_files" | grep '^\.github/workflows/' | grep -v "^${ALLOWED_WORKFLOW}$" || true)
+      if [ -n "$stray_wf" ]; then
+        echo "" >&2
+        echo "  PUSH BLOCKED — internal workflow in public push" >&2
+        echo "  Only ${ALLOWED_WORKFLOW} may ship publicly. Found:" >&2
+        printf '    %s\n' $stray_wf >&2
+        echo "" >&2
+        exit 1
+      fi
+
+      # GATE: legacy/internal markers in root config files (catches dangling
+      # references the path/file gates above cannot see — e.g. an 'inheribase'
+      # package name or a 'cron:dms' script leaking via package.json).
+      for cfg in package.json pnpm-workspace.yaml turbo.json vercel.json; do
+        if printf '%s\n' "$tree_files" | grep -q "^${cfg}$"; then
+          if git show "${local_sha}:${cfg}" 2>/dev/null | grep -qiE "$BLOCKED_MARKERS"; then
+            echo "" >&2
+            echo "  PUSH BLOCKED — legacy/internal marker in $cfg" >&2
+            echo "  $cfg contains a banned marker ($BLOCKED_MARKERS)." >&2
+            echo "  Curate it for the public repo before pushing." >&2
+            echo "" >&2
+            exit 1
+          fi
         fi
       done
     done

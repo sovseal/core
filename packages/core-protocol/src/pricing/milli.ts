@@ -1,7 +1,7 @@
 /**
- * Milli-cent accumulator math for v2 Vault Credits.
+ * Milli-cent accumulator math for v2 State Credits.
  *
- * Legacy (V1) human-vault pricing rounds every snapshot up to 1¢, which makes
+ * Legacy (V1) per-snapshot pricing rounds every snapshot up to 1¢, which makes
  * high-frequency 4 KB agent snapshots economically nonsensical. v2 keeps
  * `users.credits` as cents on the wire, but accumulates owed cost in
  * `users.credits_milli` (BIGINT). Whole cents are spilled into the cents
