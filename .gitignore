@@ -25,8 +25,8 @@ next-env.d.ts
 
 # Root-level build artifacts (produced by vercel-build.sh staging)
 /_next/
-/**/*.html
-/**/*.txt
+/*.html
+/*.txt
 /favicon.ico
 /sitemap.xml
 /robots.txt
@@ -52,6 +52,20 @@ next-env.d.ts
 /support/
 /terms/
 /trust/
+/agents/
+/api-reference/
+/components/
+/cookbooks/
+/features/
+/getting-started/
+/integrations/
+/legal/
+/platform/
+/reference/
+/sdk-reference/
+/self-hosted/
+/assets/
+/logo.svg
 
 # -----------------------------------------------------------------------------
 # Environment & secrets
@@ -60,6 +74,7 @@ next-env.d.ts
 !.env.example
 *.local
 *.pem
+mcp_config_temp.json
 
 # -----------------------------------------------------------------------------
 # Frameworks & platforms
@@ -234,3 +249,16 @@ backups/
 /apps/pixel-agents/
 supabase/.temp/
 inheribase/_next/
+.env*.local
+
+# Local Untracked / Sandbox files
+/projectZoZ/
+/externalBrandarticacts/
+/mark-white.svg
+/mark.svg
+/apps/dashboard/public/mark-white.svg
+/apps/dashboard/public/mark.svg
+/apps/extension/src/popup/index.html
+/_headers
+/scripts/sync-agents.ts
+/vite.svg
